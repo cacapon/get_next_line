@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/15 17:21:31 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/15 17:33:36 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,25 +48,26 @@ int	ft_getc(int fd)
 }
 
 /**
- * @brief
+ * @brief Adds the character c to the end of the string str.
  *
- * @param str
- * @param c
- * @return int
+ * @param [out]	str	: The string to which the character c is added.
+ * @param [in]	c	: Characters you want to add.
+ * @retval 0~127	: c ASCII numbers.
+ * @retval -1		: Failed to allocate.
  */
 int	ft_putc(t_string *str, char c)
 {
-	char	tmp;
+	char	*tmp;
 
 	if (str->len + 1 >= str->capa)
 	{
 		tmp = malloc(str->len);
-		_strncpy(tmp, str->str, str->len);
+		tmp = _strncpy(tmp, str->str, str->len);
 		str->capa = (str->len + 1) * 2;
 		free(str->str);
 		str->str = malloc(str->capa);
 		if (!str->str)
-			return (EOF);
+			return (-1);
 		str->str = _strncpy(str->str, tmp, str->len);
 	}
 	str->str[str->len] = c;
