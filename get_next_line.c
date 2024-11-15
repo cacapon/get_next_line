@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/15 17:17:51 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/15 17:41:32 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*get_next_line(int fd)
 	{
 		c = ft_getc(fd);
 		if (c == EOF)
-			return (NULL);
+			break ;
 		ft_putc(&line, c);
 		if (c == '\n')
 			break ;
