@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/15 17:15:37 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/15 17:17:51 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,25 +18,24 @@
  * @retval char* 	: Read line
  * @retval NULL		: there is nothing else to read, or an error occurred
  */
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	t_string line;
-	char c;
+	t_string	line;
+	char		c;
 
 	line.str = NULL;
 	line.capa = 0;
 	line.len = 0;
-
-	while(1)
+	while (1)
 	{
 		c = ft_getc(fd);
 		if (c == EOF)
-			return NULL;
+			return (NULL);
 		ft_putc(&line, c);
 		if (c == '\n')
-			break;
+			break ;
 	}
-	if(line.len > 0)
+	if (line.len > 0)
 		ft_putc(&line, '\0');
 	return (line.str);
 }
