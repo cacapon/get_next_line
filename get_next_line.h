@@ -6,13 +6,15 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/15 17:17:36 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/15 17:48:11 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-# define BUFFER_SIZE 3
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 3
+# endif
 # define EOF -1
 # include <stdlib.h>
 # include <unistd.h>

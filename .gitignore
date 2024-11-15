@@ -58,6 +58,7 @@ dkms.conf
 # End of https://www.toptal.com/developers/gitignore/api/c
 
 # Custom
+main
 main.c
 *.txt
 .vscode
