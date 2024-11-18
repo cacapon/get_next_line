@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/18 12:51:34 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/18 14:40:47 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static char	*_strncpy(char *dst, const char *src, size_t srcsize)
  */
 int	ft_getc(int fd)
 {
-	static t_fd_state state;
+	static t_fd_state	state;
 
 	if (state.n == 0)
 	{
