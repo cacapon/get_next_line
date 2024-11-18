@@ -62,3 +62,4 @@ main
 main.c
 *.txt
 .vscode
+test/

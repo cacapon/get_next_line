@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/18 14:40:47 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/18 15:33:27 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int	ft_putc(t_string *str, char c)
 		if (!str->str)
 			return (-1);
 		str->str = _strncpy(str->str, tmp, str->len);
+		free(tmp);
 	}
 	str->str[str->len] = c;
 	str->len++;
