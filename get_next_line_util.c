@@ -6,13 +6,21 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/15 17:33:36 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/18 11:33:18 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
+/**
+ * @brief Copy src to dst up to strsize characters.
+ * 
+ * @param [out] dst		: Destination memory address
+ * @param [in]	src 	: Source string
+ * @param [in]	srcsize	: Number of characters to copy
+ * @return char* 		: dst's top pointer
+ */
 static char	*_strncpy(char *dst, const char *src, size_t srcsize)
 {
 	size_t	i;
@@ -32,9 +40,9 @@ static char	*_strncpy(char *dst, const char *src, size_t srcsize)
  */
 int	ft_getc(int fd)
 {
-	static char	buf[BUFFER_SIZE];
-	static char	*bufp;
-	static int	n = 0;
+	static char		buf[BUFFER_SIZE];
+	static char		*bufp;
+	static ssize_t	n = 0;
 
 	if (n == 0)
 	{
