@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/18 15:33:27 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/18 16:47:35 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 /**
  * @brief Copy src to dst up to strsize characters.
- * 
+ *
  * @param [out] dst		: Destination memory address
  * @param [in]	src 	: Source string
  * @param [in]	srcsize	: Number of characters to copy
@@ -41,17 +41,17 @@ static char	*_strncpy(char *dst, const char *src, size_t srcsize)
  */
 int	ft_getc(int fd)
 {
-	static t_fd_state	state;
+	static t_fd_state	state[MAX_FD];
 
-	if (state.n == 0)
+	if (state[fd].n == 0)
 	{
-		state.n = read(fd, state.buf, sizeof(state.buf));
-		if (state.n <= 0)
+		state[fd].n = read(fd, state[fd].buf, sizeof(state[fd].buf));
+		if (state[fd].n <= 0)
 			return (EOF);
-		state.bufp = state.buf;
+		state[fd].bufp = state[fd].buf;
 	}
-	state.n--;
-	return ((unsigned char)*state.bufp++);
+	state[fd].n--;
+	return ((unsigned char)*state[fd].bufp++);
 }
 
 /**

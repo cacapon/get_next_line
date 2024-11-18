@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/18 12:28:02 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/18 16:47:52 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #  define BUFFER_SIZE 3
 # endif
 # define EOF -1
+# define MAX_FD 1024
 # include <stdlib.h>
 # include <unistd.h>
 
