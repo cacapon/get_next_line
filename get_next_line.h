@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/15 17:48:11 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/18 12:28:02 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,13 @@
 # define EOF -1
 # include <stdlib.h>
 # include <unistd.h>
+
+typedef struct s_fd_state
+{
+	char	buf[BUFFER_SIZE];
+	char	*bufp;
+	ssize_t	n;
+}			t_fd_state;
 
 typedef struct s_string
 {

@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/18 11:33:18 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/18 12:51:34 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,23 +36,22 @@ static char	*_strncpy(char *dst, const char *src, size_t srcsize)
  * @details
  * 	The remaining characters are retained.
  * @param [in] fd : file descriptor
- * @return int: One character read
+ * @retval int: One character read
+ * @retval EOF:	Couldn't read it
  */
 int	ft_getc(int fd)
 {
-	static char		buf[BUFFER_SIZE];
-	static char		*bufp;
-	static ssize_t	n = 0;
+	static t_fd_state state;
 
-	if (n == 0)
+	if (state.n == 0)
 	{
-		n = read(fd, buf, sizeof buf);
-		bufp = buf;
+		state.n = read(fd, state.buf, sizeof(state.buf));
+		if (state.n <= 0)
+			return (EOF);
+		state.bufp = state.buf;
 	}
-	if ((--n >= 0))
-		return ((unsigned char)*bufp++);
-	else
-		return (EOF);
+	state.n--;
+	return ((unsigned char)*state.bufp++);
 }
 
 /**
