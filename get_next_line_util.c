@@ -6,12 +6,11 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/18 16:47:35 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/19 13:46:57 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 /**
  * @brief Copy src to dst up to strsize characters.
@@ -35,19 +34,21 @@ static char	*_strncpy(char *dst, const char *src, size_t srcsize)
  * @brief Returns one character read from fd for BUFFER_SIZE.
  * @details
  * 	The remaining characters are retained.
- * @param [in] fd : file descriptor
- * @retval int: One character read
- * @retval EOF:	Couldn't read it
+ * @param [in] fd 			: file descriptor
+ * @retval int				: One character read
+ * @retval COULD_NOT_READ	:	Couldn't read it
  */
 int	ft_getc(int fd)
 {
 	static t_fd_state	state[MAX_FD];
 
+	if (fd < 0)
+		return (COULD_NOT_READ);
 	if (state[fd].n == 0)
 	{
 		state[fd].n = read(fd, state[fd].buf, sizeof(state[fd].buf));
 		if (state[fd].n <= 0)
-			return (EOF);
+			return (COULD_NOT_READ);
 		state[fd].bufp = state[fd].buf;
 	}
 	state[fd].n--;
