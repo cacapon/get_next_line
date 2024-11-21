@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/19 13:45:30 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/21 11:23:38 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,11 @@ char	*get_next_line(int fd)
 		c = ft_getc(fd);
 		if (c == COULD_NOT_READ)
 			break ;
-		ft_putc(&line, c);
+		if (ft_putc(&line, c) == -1)
+		{
+			free(line.str);
+			return (NULL);
+		}
 		if (c == '\n')
 			break ;
 	}
