@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/19 13:45:22 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/21 13:12:49 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,27 +15,34 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 3
 # endif
-# define MAX_FD 1024
+# define IS_NULL -1
+# define IS_BREAK -2
 # define COULD_NOT_READ -1
 # include <stdlib.h>
 # include <unistd.h>
 
+struct s_fd_state;
+
 typedef struct s_fd_state
 {
-	char	buf[BUFFER_SIZE];
-	char	*bufp;
-	ssize_t	n;
-}			t_fd_state;
+	int					fd;
+	char				buf[BUFFER_SIZE];
+	char				*bufp;
+	ssize_t				n;
+	struct s_fd_state	*next;
+}						t_fd_state;
 
 typedef struct s_string
 {
-	char	*str;
-	size_t	len;
-	size_t	capa;
-}			t_string;
+	char				*str;
+	size_t				len;
+	size_t				capa;
+}						t_string;
 
-int			ft_getc(int fd);
-int			ft_putc(t_string *str, char c);
-char		*get_next_line(int fd);
+t_fd_state				*get_fd_node(t_fd_state **fd_list, int fd);
+void					remove_fd_node(t_fd_state **fd_list, int fd);
+int						ft_getc(t_fd_state *state);
+int						ft_putc(t_string *str, char c);
+char					*get_next_line(int fd);
 
 #endif
