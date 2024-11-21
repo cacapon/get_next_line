@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/19 13:46:57 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/21 11:14:25 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,15 +69,13 @@ int	ft_putc(t_string *str, char c)
 
 	if (str->len + 1 >= str->capa)
 	{
-		tmp = malloc(str->len);
-		tmp = _strncpy(tmp, str->str, str->len);
 		str->capa = (str->len + 1) * 2;
-		free(str->str);
-		str->str = malloc(str->capa);
-		if (!str->str)
+		tmp = malloc(str->capa);
+		if (!tmp)
 			return (-1);
-		str->str = _strncpy(str->str, tmp, str->len);
-		free(tmp);
+		tmp = _strncpy(tmp, str->str, str->len);
+		free(str->str);
+		str->str = tmp;
 	}
 	str->str[str->len] = c;
 	str->len++;
