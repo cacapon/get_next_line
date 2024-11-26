@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:51:29 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/26 13:56:08 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/26 16:22:32 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ t_status	ft_putline(t_fd_info *fd_info)
 		free(fd_info->line);
 		fd_info->line = tmp;
 	}
-	while (fd_info->buf_len < 0 && *(fd_info->buf) != '\0')
+	while (fd_info->buf_len > 0 && *(fd_info->buf) != '\0')
 	{
 		fd_info->line[fd_info->line_len] = *fd_info->buf++;
 		fd_info->line_len++;

@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 10:21:00 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/26 14:10:55 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/26 16:36:31 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,8 @@ static t_fd_exist	_is_fd_exist(int fd, t_fd_info *fd_data)
 {
 	t_fd_info	*now_node;
 
-	if (!fd_data)
-		return (FD_NOT_EXIST);
 	now_node = fd_data;
-	while (now_node->next)
+	while (now_node)
 	{
 		if (now_node->fd == fd)
 			return (FD_EXIST);
@@ -51,20 +49,22 @@ static t_status	_fd_info_init(int fd, t_fd_info **fd_info_list)
 
 	if (_is_fd_exist(fd, *fd_info_list) == FD_EXIST)
 		return (STATUS_OK);
-	// add_frontと同じ動きにしたい
 	new_info = malloc(sizeof(t_fd_info));
 	if (!new_info)
 		return (STATUS_NG);
 	new_info->fd = fd;
 	new_info->buf = malloc(BUFFER_SIZE);
 	if (!new_info->buf)
+	{
+		free(new_info);
 		return (STATUS_NG);
+	}
 	new_info->buf_len = 0;
 	new_info->line = NULL;
 	new_info->line_len = 0;
 	new_info->line_capa = 0;
 	new_info->next = *fd_info_list;
-	fd_info_list = &new_info;
+	*fd_info_list = new_info;
 	return (STATUS_OK);
 }
 
@@ -77,7 +77,7 @@ static t_status	_fd_info_init(int fd, t_fd_info **fd_info_list)
  * @retval STATUS_OK	: fdの構造体が見つかった
  * @retval STATUS_NG	: fdの構造体が見つからなかった
  */
-static t_status	_get_fd_info(int fd, t_fd_info *base, t_fd_info *node)
+static t_status	_get_fd_info(int fd, t_fd_info *base, t_fd_info **node)
 {
 	t_fd_info	*check;
 
@@ -86,7 +86,7 @@ static t_status	_get_fd_info(int fd, t_fd_info *base, t_fd_info *node)
 	{
 		if (check->fd == fd)
 		{
-			node = check;
+			*node = check;
 			return (STATUS_OK);
 		}
 		check = check->next;
@@ -138,7 +138,7 @@ char	*get_next_line(int fd)
 	now_fd_info = NULL;
 	if (_fd_info_init(fd, &fd_info_list) == STATUS_NG)
 		return (NULL);
-	if (_get_fd_info(fd, fd_info_list, now_fd_info) == STATUS_NG)
+	if (_get_fd_info(fd, fd_info_list, &now_fd_info) == STATUS_NG)
 		return (_remove_fd_node(fd, &fd_info_list));
 	while (1)
 	{
