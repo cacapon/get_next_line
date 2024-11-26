@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/26 13:24:09 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/26 13:41:42 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,26 +49,6 @@ typedef struct s_fd_info
 // prototype
 
 t_status	ft_getbuf(t_fd_info *fd_info);
-
-// typedef struct s_buffer_info
-// {
-	
-// }
-
-// typedef struct s_fd_state
-// {
-// 	int					fd;
-// 	char				buf[BUFFER_SIZE];
-// 	char				*bufp;
-// 	ssize_t				n;
-// 	struct s_fd_state	*next;
-// }						t_fd_state;
-
-// typedef struct s_string
-// {
-// 	char				*str;
-// 	size_t				len;
-// 	size_t				capa;
-// }						t_string;
+t_status	ft_putline(t_fd_info *fd_info);
 
 #endif

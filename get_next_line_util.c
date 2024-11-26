@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:51:29 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/26 13:40:01 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/26 13:41:53 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 /**
  * @brief srcの文字列をsrcsizeまでdstにコピーします
- * 
+ *
  * @param dst 		: コピー先の文字列用の領域
  * @param src 		: コピーする文字列
  * @param srcsize	: srcのサイズ
@@ -32,13 +32,14 @@ static char	*_strncpy(char *dst, const char *src, size_t srcsize)
 
 /**
  * @brief fd_infoのlineにbufの内容をセットします。
- * 
- * @param fd_info 
- * @return t_status 
+ *
+ * @param fd_info
+ * @return t_status
  */
 t_status	ft_putline(t_fd_info *fd_info)
 {
-	char *tmp;
+	char	*tmp;
+
 	if (fd_info->line_capa < fd_info->line_len + fd_info->buf_len)
 	{
 		fd_info->line_capa = (fd_info->line_len + fd_info->buf_len) * 2;
@@ -55,14 +56,14 @@ t_status	ft_putline(t_fd_info *fd_info)
 		fd_info->line_len++;
 		fd_info->buf_len--;
 		if (*(fd_info->buf) == '\n')
-			break;
+			break ;
 	}
 	return (STATUS_OK);
 }
 
 /**
  * @brief バッファがからの場合,readを使ってbufにセットします。
- * 
+ *
  * @param [out]	fd_info	: fdの情報を管理している構造体
  * @retval STATUS_OK	: 正常に読み込めた・読み込む必要がなかった
  * @retval STATUS_NG	: fdから読み込めない・readしたが空だった
