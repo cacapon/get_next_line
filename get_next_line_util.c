@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:51:29 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/26 16:22:32 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/26 18:19:46 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,16 @@ static char	*_strncpy(char *dst, const char *src, size_t srcsize)
 
 /**
  * @brief 文字列に改行が含まれているかチェックします
- * 
+ *
  * @param [in] str		: 検索する文字列
- * @retval STATUS_OK	: 改行が含まれていた 
+ * @retval STATUS_OK	: 改行が含まれていた
  * @retval STATUS_NG	: 改行が含まれていなかった
  */
 t_status	ft_contain_linebreak(char *str)
 {
 	while (*str)
 	{
-		if(*str == '\n')
+		if (*str == '\n')
 			return (STATUS_OK);
 		str++;
 	}
@@ -55,28 +55,32 @@ t_status	ft_contain_linebreak(char *str)
  * @retval STATUS_OK	: 正常に読み込めた・読み込む必要がなかった
  * @retval STATUS_NG	: tmpのメモリ割当に失敗した
  */
-t_status	ft_putline(t_fd_info *fd_info)
+t_status	ft_putline(t_line_info *line_info, t_fd_info *fd_info)
 {
 	char	*tmp;
 
-	if (fd_info->line_capa < fd_info->line_len + fd_info->buf_len)
+	if (line_info->capa < line_info->len + fd_info->buf_len)
 	{
-		fd_info->line_capa = (fd_info->line_len + fd_info->buf_len) * 2;
-		tmp = malloc(fd_info->line_capa);
+		line_info->capa = (line_info->len + fd_info->buf_len) * 2;
+		tmp = malloc(line_info->capa);
 		if (!tmp)
 			return (STATUS_NG);
-		tmp = _strncpy(tmp, fd_info->line, fd_info->line_len);
-		free(fd_info->line);
-		fd_info->line = tmp;
+		if (line_info->str)
+		{
+			_strncpy(tmp, line_info->str, line_info->len);
+			free(line_info->str);
+		}
+		line_info->str = tmp;
 	}
 	while (fd_info->buf_len > 0 && *(fd_info->buf) != '\0')
 	{
-		fd_info->line[fd_info->line_len] = *fd_info->buf++;
-		fd_info->line_len++;
+		line_info->str[line_info->len] = *fd_info->buf++;
+		line_info->len++;
 		fd_info->buf_len--;
-		if (*(fd_info->buf) == '\n')
+		if (*(fd_info->buf - 1) == '\n')
 			break ;
 	}
+	line_info->str[line_info->len] = '\0';
 	return (STATUS_OK);
 }
 

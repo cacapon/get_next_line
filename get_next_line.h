@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/26 13:58:03 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/26 18:10:05 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,24 +33,28 @@ typedef enum e_fd_exist
 	FD_NOT_EXIST = 0
 }						t_fd_exist;
 
-struct	s_fd_info;
+struct s_fd_info;
 
 typedef struct s_fd_info
 {
 	int					fd;
 	char				*buf;
 	ssize_t				buf_len;
-	char				*line;
-	ssize_t				line_len;
-	ssize_t				line_capa;
 	struct s_fd_info	*next;
 }						t_fd_info;
 
+typedef struct s_line_info
+{
+	char				*str;
+	ssize_t				len;
+	ssize_t				capa;
+}						t_line_info;
+
 // prototype
 
-char		*get_next_line(int fd);
-t_status	ft_getbuf(t_fd_info *fd_info);
-t_status	ft_putline(t_fd_info *fd_info);
-t_status	ft_contain_linebreak(char *str);
+char					*get_next_line(int fd);
+t_status				ft_getbuf(t_fd_info *fd_info);
+t_status				ft_putline(t_line_info *line_info, t_fd_info *fd_info);
+t_status				ft_contain_linebreak(char *str);
 
 #endif
