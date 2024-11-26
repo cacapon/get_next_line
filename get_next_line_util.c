@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:51:29 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/26 13:41:53 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/26 13:56:08 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,29 @@ static char	*_strncpy(char *dst, const char *src, size_t srcsize)
 }
 
 /**
- * @brief fd_infoのlineにbufの内容をセットします。
+ * @brief 文字列に改行が含まれているかチェックします
+ * 
+ * @param [in] str		: 検索する文字列
+ * @retval STATUS_OK	: 改行が含まれていた 
+ * @retval STATUS_NG	: 改行が含まれていなかった
+ */
+t_status	ft_contain_linebreak(char *str)
+{
+	while (*str)
+	{
+		if(*str == '\n')
+			return (STATUS_OK);
+		str++;
+	}
+	return (STATUS_NG);
+}
+
+/**
+ * @brief fd_infoのlineにbufの内容をセットします
  *
- * @param fd_info
- * @return t_status
+ * @param [out]	fd_info	: fdの情報を管理している構造体
+ * @retval STATUS_OK	: 正常に読み込めた・読み込む必要がなかった
+ * @retval STATUS_NG	: tmpのメモリ割当に失敗した
  */
 t_status	ft_putline(t_fd_info *fd_info)
 {
@@ -46,11 +65,11 @@ t_status	ft_putline(t_fd_info *fd_info)
 		tmp = malloc(fd_info->line_capa);
 		if (!tmp)
 			return (STATUS_NG);
-		tmp = _ft_strncpy(tmp, fd_info->line, fd_info->line_len);
+		tmp = _strncpy(tmp, fd_info->line, fd_info->line_len);
 		free(fd_info->line);
 		fd_info->line = tmp;
 	}
-	while (fd_info->buf_len < 0 && *(fd_info->buf) == '\0')
+	while (fd_info->buf_len < 0 && *(fd_info->buf) != '\0')
 	{
 		fd_info->line[fd_info->line_len] = *fd_info->buf++;
 		fd_info->line_len++;

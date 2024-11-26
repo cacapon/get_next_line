@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 10:21:00 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/26 13:24:35 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/26 14:10:55 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,13 @@ static t_fd_exist	_is_fd_exist(int fd, t_fd_info *fd_data)
  * @retval e_status OK	: 正常終了
  * @retval e_status NG	: メモリ割り当てに失敗した
  */
-static t_status	_fd_info_init(int fd, t_fd_info *fd_info)
+static t_status	_fd_info_init(int fd, t_fd_info **fd_info_list)
 {
 	t_fd_info	*new_info;
 
-	if (_is_fd_exist(fd, fd_info))
+	if (_is_fd_exist(fd, *fd_info_list) == FD_EXIST)
 		return (STATUS_OK);
+	// add_frontと同じ動きにしたい
 	new_info = malloc(sizeof(t_fd_info));
 	if (!new_info)
 		return (STATUS_NG);
@@ -62,7 +63,8 @@ static t_status	_fd_info_init(int fd, t_fd_info *fd_info)
 	new_info->line = NULL;
 	new_info->line_len = 0;
 	new_info->line_capa = 0;
-	new_info->next = fd_info;
+	new_info->next = *fd_info_list;
+	fd_info_list = &new_info;
 	return (STATUS_OK);
 }
 
@@ -133,18 +135,21 @@ char	*get_next_line(int fd)
 	static t_fd_info	*fd_info_list = NULL;
 	t_fd_info			*now_fd_info;
 
-	if (_fd_info_init(fd, fd_info_list) == STATUS_NG)
+	now_fd_info = NULL;
+	if (_fd_info_init(fd, &fd_info_list) == STATUS_NG)
 		return (NULL);
 	if (_get_fd_info(fd, fd_info_list, now_fd_info) == STATUS_NG)
-		return (_remove_fd_node(fd, fd_info_list));
+		return (_remove_fd_node(fd, &fd_info_list));
 	while (1)
 	{
 		if (ft_getbuf(now_fd_info) == STATUS_NG)
-			return (_remove_fd_node(fd, fd_info_list));
+			return (_remove_fd_node(fd, &fd_info_list));
 		if (ft_putline(now_fd_info) == STATUS_NG)
-			return (_remove_fd_node(fd, fd_info_list));
-		if (ft_contain_linebreak(fd_info_list) == STATUS_OK)
+			return (_remove_fd_node(fd, &fd_info_list));
+		if (ft_contain_linebreak(fd_info_list->line) == STATUS_OK)
 			break ;
 	}
 	return (fd_info_list->line);
 }
+
+//TODO: fd_info_listが初期化できてない 

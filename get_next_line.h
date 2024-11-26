@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/26 13:45:10 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/26 13:58:03 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #  define BUFFER_SIZE 3
 # endif
 
-// using read(), malloc()
+// using read(), malloc(), free()
 # include <stdlib.h>
 # include <unistd.h>
 
@@ -48,7 +48,9 @@ typedef struct s_fd_info
 
 // prototype
 
+char		*get_next_line(int fd);
 t_status	ft_getbuf(t_fd_info *fd_info);
 t_status	ft_putline(t_fd_info *fd_info);
+t_status	ft_contain_linebreak(char *str);
 
 #endif
