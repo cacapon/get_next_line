@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 17:26:49 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 17:39:20 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,15 @@
 # endif
 
 // enum
+
+// Generic state management enum
 typedef enum e_gnl_status
 {
 	GNL_OK = 0,
 	GNL_NG = 1,
 }						t_gnl_status;
 
+// State management enum for getc
 typedef enum e_getc_status
 {
 	GETC_ERROR = -1,
@@ -36,6 +39,7 @@ typedef enum e_getc_status
 	GETC_SUCCESS = 1,
 }						t_getc_status;
 
+//State management enum for putc
 typedef enum e_putc_status
 {
 	PUTC_ERROR = -1,
@@ -43,6 +47,8 @@ typedef enum e_putc_status
 }						t_putc_status;
 
 // struct
+
+// state-controlling structure
 typedef struct s_status
 {
 	t_gnl_status		gnl_sts;
@@ -53,7 +59,7 @@ typedef struct s_status
 typedef struct s_fd_buffer
 {
 	int					fd;
-	char				buffer[BUFFER_SIZE];
+	char				*buffer;
 	char				*bufp;
 	size_t				buf_len;
 	struct s_fd_buffer	*next;

@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 17:27:54 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 17:44:28 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@ t_fd_buffer	*new_fd_node(int fd)
 	if (!new_node)
 		return (NULL);
 	*new_node = (t_fd_buffer){.fd = fd, .next = NULL};
+	new_node->buffer = malloc(BUFFER_SIZE * sizeof(char));
+	if (!new_node->buffer)
+		return (NULL);
 	ui = 0;
 	while (ui < BUFFER_SIZE)
 		new_node->buffer[ui++] = '\0';
@@ -73,6 +76,7 @@ int	delete_fd_node(t_fd_buffer **head, int fd)
 				prev->next = current->next;
 			else
 				*head = current->next;
+			free(current->buffer);
 			free(current);
 			return (GNL_OK);
 		}
