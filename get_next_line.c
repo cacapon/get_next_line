@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 17:00:03 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 17:27:06 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,23 +57,23 @@ static char	*handle_error(t_fd_buffer **fd_list, t_string *newline, int fd)
  * @retval PUTC_ERROR	: Failure to obtain character c
  * @retval PUTC_EOF		: Reach EOF
  */
-t_putc_status	ft_getc(t_fd_buffer *fd_buf, unsigned char *cp)
+int	ft_getc(t_fd_buffer *fd_buf, unsigned char *cp)
 {
 	if (fd_buf->fd < 0)
-		return (PUTC_ERROR);
+		return (GETC_ERROR);
 	if (fd_buf->buf_len == 0)
 	{
 		fd_buf->buf_len = read(fd_buf->fd, fd_buf->buffer,
 				sizeof(fd_buf->buffer));
 		if (fd_buf->buf_len < 0)
-			return (PUTC_ERROR);
+			return (GETC_ERROR);
 		if (fd_buf->buf_len == 0)
-			return (PUTC_EOF);
+			return (GETC_EOF);
 		fd_buf->bufp = fd_buf->buffer;
 	}
 	*cp = (unsigned char)*fd_buf->bufp++;
 	fd_buf->buf_len--;
-	return (PUTC_SUCCESS);
+	return (GETC_SUCCESS);
 }
 
 /**
@@ -84,16 +84,18 @@ t_putc_status	ft_getc(t_fd_buffer *fd_buf, unsigned char *cp)
  * @retval 0~127	: c ASCII numbers.
  * @retval -1		: Failed to allocate.
  */
-int	ft_putc(t_string *str, char c)
+int	ft_putc(t_string *str, char c, t_getc_status sts)
 {
 	char	*tmp;
 
+	if (sts != GETC_SUCCESS)
+		return (PUTC_ERROR);
 	if (str->len + 1 >= str->capa)
 	{
 		str->capa = (str->len + 1) * 2;
 		tmp = malloc(str->capa);
 		if (!tmp)
-			return (-1);
+			return (PUTC_ERROR);
 		tmp = _strncpy(tmp, str->str, str->len);
 		tmp[str->len] = '\0';
 		free(str->str);
@@ -101,7 +103,7 @@ int	ft_putc(t_string *str, char c)
 	}
 	str->str[str->len] = c;
 	str->len++;
-	return (c);
+	return (PUTC_SUCCESS);
 }
 
 /**
@@ -116,7 +118,7 @@ char	*get_next_line(int fd)
 	t_fd_buffer			*current_fd;
 	t_string			newline;
 	unsigned char		byte_read;
-	t_putc_status		putc_result;
+	t_status			result;
 
 	current_fd = setup_fd_buffer(fd, &fd_list);
 	if (!current_fd)
@@ -124,19 +126,16 @@ char	*get_next_line(int fd)
 	newline = (t_string){.str = NULL, .len = 0, .capa = 0};
 	while (1)
 	{
-		putc_result = ft_getc(current_fd, &byte_read);
-		if (putc_result == PUTC_ERROR)
+		result.getc_sts = ft_getc(current_fd, &byte_read);
+		result.putc_sts = ft_putc(&newline, byte_read, result.getc_sts);
+		if (result.getc_sts == GETC_ERROR || result.putc_sts == PUTC_ERROR)
 			return (handle_error(&fd_list, &newline, fd));
-		if (putc_result == PUTC_EOF)
-			break ;
-		if (ft_putc(&newline, byte_read) == -1)
-			return (handle_error(&fd_list, &newline, fd));
-		if (byte_read == '\n')
+		if (result.getc_sts == GETC_EOF || byte_read == '\n')
 			break ;
 	}
 	if (newline.len > 0)
-		ft_putc(&newline, '\0');
-	if (putc_result == PUTC_EOF)
+		ft_putc(&newline, '\0', result.getc_sts);
+	if (result.getc_sts == GETC_EOF)
 		delete_fd_node(&fd_list, fd);
 	return (newline.str);
 }

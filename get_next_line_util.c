@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 16:47:46 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 17:27:54 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ t_fd_buffer	*new_fd_node(int fd)
  * @retval GNL_OK	: node creation succeeded
  * @retval GNL_NG	: Node creation failure
  */
-t_status	add_fd_node(t_fd_buffer **head, t_fd_buffer *new_node)
+int	add_fd_node(t_fd_buffer **head, t_fd_buffer *new_node)
 {
 	if (!head || !new_node)
 		return (GNL_NG);
@@ -56,7 +56,7 @@ t_status	add_fd_node(t_fd_buffer **head, t_fd_buffer *new_node)
  * @param head : head of list of file descriptor nodes
  * @param fd : file descriptor to search
  */
-t_status	delete_fd_node(t_fd_buffer **head, int fd)
+int	delete_fd_node(t_fd_buffer **head, int fd)
 {
 	t_fd_buffer	*current;
 	t_fd_buffer	*prev;
