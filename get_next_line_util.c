@@ -6,17 +6,17 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 13:58:51 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 15:24:45 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 /**
- * @brief ファイルディスクリプタノードを追加する
- *
- * @param fd
- * @return t_fd_buffer*
+ * @brief create new fd node
+ * 
+ * @param fd			: file descriptor
+ * @retval t_fd_buffer*	: fd_buffer structures
  */
 t_fd_buffer	*new_fd_node(int fd)
 {
@@ -34,12 +34,12 @@ t_fd_buffer	*new_fd_node(int fd)
 }
 
 /**
- * @brief 先頭に新しいノードを追加します
+ * @brief Add a new node at the beginning
  *
- * @param head
- * @param new_node
- * @retval GNL_OK: ノード作成成功
- * @retval GNL_NG: ノード作成失敗
+ * @param head 		: First pointer to fd structure list
+ * @param new_node	:Pointer to node to be added
+ * @retval GNL_OK	: node creation succeeded
+ * @retval GNL_NG	: Node creation failure
  */
 t_status	add_fd_node(t_fd_buffer **head, t_fd_buffer *new_node)
 {
@@ -51,10 +51,10 @@ t_status	add_fd_node(t_fd_buffer **head, t_fd_buffer *new_node)
 }
 
 /**
- * @brief 指定したfdのノードを削除します。
+ * @brief Delete a node in the specified fd.
  *
- * @param head    		: ファイルディスクリプタノードのリストの先頭
- * @param fd      		: 検索対象のファイルディスクリプタ
+ * @param head : head of list of file descriptor nodes
+ * @param fd : file descriptor to search
  */
 t_status	delete_fd_node(t_fd_buffer **head, int fd)
 {
@@ -84,12 +84,12 @@ t_status	delete_fd_node(t_fd_buffer **head, int fd)
 }
 
 /**
- * @brief 引数fdのノードを検索し、ポインタを返します。
+ * @brief Searches for a node in argument fd and returns a pointer to it.
  *
- * @param head    		: ファイルディスクリプタノードのリストの先頭
- * @param fd      		: 検索対象のファイルディスクリプタ
- * @retval t_fd_buffer* : 見つかったノードのポインタ（成功）
- * @retval NULL         : ノードが見つからない場合
+ * @param head : head of the list of file descriptor nodes
+ * @param fd : file descriptor to search
+ * @retval t_fd_buffer* : pointer to the found node (success)
+ * @retval NULL : if node not found
  */
 t_fd_buffer	*find_fd_node(t_fd_buffer *head, int fd)
 {
