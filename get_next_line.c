@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 15:46:04 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 15:56:07 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,9 @@ static t_fd_buffer	*_setup_fd_buffer(int fd, t_fd_buffer **fd_list)
 	if (!current_fd)
 	{
 		current_fd = new_fd_node(fd);
-		if (!current_fd || add_fd_node(fd_list, current_fd) == GNL_NG)
+		if (!current_fd)
+			return (NULL);
+		if (add_fd_node(fd_list, current_fd) == GNL_NG)
 		{
 			free(current_fd);
 			return (NULL);
