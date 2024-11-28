@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 15:27:10 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 15:46:04 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,14 +75,14 @@ t_putc_status	ft_getc(t_fd_buffer *fd_buf, unsigned char *cp)
 	{
 		fd_buf->buf_len = read(fd_buf->fd, fd_buf->buffer,
 				sizeof(fd_buf->buffer));
-		if (fd_buf->buf_len <= 0)
+		if (fd_buf->buf_len < 0)
 			return (PUTC_ERROR);
+		if (fd_buf->buf_len == 0)
+			return (PUTC_EOF);
 		fd_buf->bufp = fd_buf->buffer;
 	}
-	fd_buf->buf_len--;
-	if (fd_buf->buf_len < 0)
-		return (PUTC_EOF);
 	*cp = (unsigned char)*fd_buf->bufp++;
+	fd_buf->buf_len--;
 	return (PUTC_SUCCESS);
 }
 
@@ -126,18 +126,22 @@ char	*get_next_line(int fd)
 	t_fd_buffer			*current_fd;
 	t_string			newline;
 	unsigned char		byte_read;
+	t_putc_status		putc_result;
 
 	current_fd = _setup_fd_buffer(fd, &fd_list);
 	newline = (t_string){NULL, 0, 0};
 	while (1)
 	{
-		if (ft_getc(current_fd, &byte_read) == PUTC_ERROR)
+		putc_result = ft_getc(current_fd, &byte_read);
+		if (putc_result == PUTC_ERROR)
 		{
 			delete_fd_node(&fd_list, fd);
 			if (newline.str)
 				free(newline.str);
 			return (NULL);
 		}
+		if (putc_result == PUTC_EOF)
+			break;
 		ft_putc(&newline, byte_read);
 		if (byte_read == '\n')
 			break ;
