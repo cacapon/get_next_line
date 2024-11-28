@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 17:44:28 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 17:56:42 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 /**
  * @brief create new fd node
- * 
+ *
  * @param fd			: file descriptor
  * @retval t_fd_buffer*	: fd_buffer structures
  */
@@ -29,7 +29,10 @@ t_fd_buffer	*new_fd_node(int fd)
 	*new_node = (t_fd_buffer){.fd = fd, .next = NULL};
 	new_node->buffer = malloc(BUFFER_SIZE * sizeof(char));
 	if (!new_node->buffer)
+	{
+		free(new_node);
 		return (NULL);
+	}
 	ui = 0;
 	while (ui < BUFFER_SIZE)
 		new_node->buffer[ui++] = '\0';
