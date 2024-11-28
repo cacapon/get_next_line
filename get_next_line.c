@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 16:55:51 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 17:00:03 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,8 @@ char	*get_next_line(int fd)
 			return (handle_error(&fd_list, &newline, fd));
 		if (putc_result == PUTC_EOF)
 			break ;
-		ft_putc(&newline, byte_read);
+		if (ft_putc(&newline, byte_read) == -1)
+			return (handle_error(&fd_list, &newline, fd));
 		if (byte_read == '\n')
 			break ;
 	}
