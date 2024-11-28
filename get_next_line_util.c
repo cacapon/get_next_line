@@ -6,78 +6,87 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 12:12:24 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 13:30:24 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 /**
- * @brief Copy src to dst up to strsize characters.
+ * @brief ファイルディスクリプタノードを追加する
  *
- * @param [out] dst		: Destination memory address
- * @param [in]	src 	: Source string
- * @param [in]	srcsize	: Number of characters to copy
- * @return char* 		: dst's top pointer
+ * @param fd
+ * @return t_fd_buffer*
  */
-static char	*_strncpy(char *dst, const char *src, size_t srcsize)
+t_fd_buffer	*new_fd_node(int fd)
 {
-	size_t	i;
+	t_fd_buffer	*new_node;
 
-	i = 0;
-	while (i < srcsize && *src)
-		dst[i++] = *src++;
-	return (dst);
+	new_node = malloc(sizeof(t_fd_buffer));
+	if (!new_node)
+		return (NULL);
+	*new_node = (t_fd_buffer){.fd = fd, .buffer = NULL, .next = NULL};
+	return (new_node);
 }
 
 /**
- * @brief Returns one character read from fd for BUFFER_SIZE.
- * @details
- * 	The remaining characters are retained.
- * @param [in] fd 			: file descriptor
- * @retval int				: One character read
- * @retval COULD_NOT_READ	:	Couldn't read it
+ * @brief 先頭に新しいノードを追加します
+ *
+ * @param head
+ * @param new_node
  */
-int	ft_getc(int fd)
+void	add_fd_node(t_fd_buffer **head, t_fd_buffer *new_node)
 {
-	static t_fd_state	state[MAX_FD];
-
-	if (fd < 0)
-		return (COULD_NOT_READ);
-	if (state[fd].n == 0)
-	{
-		state[fd].n = read(fd, state[fd].buf, sizeof(state[fd].buf));
-		if (state[fd].n <= 0)
-			return (COULD_NOT_READ);
-		state[fd].bufp = state[fd].buf;
-	}
-	state[fd].n--;
-	return ((unsigned char)*state[fd].bufp++);
+	if (!head || !new_node)
+		return ;
+	new_node->next = *head;
+	*head = new_node;
 }
 
 /**
- * @brief Adds the character c to the end of the string str.
+ * @brief 指定したfdのノードを削除します。
  *
- * @param [out]	str	: The string to which the character c is added.
- * @param [in]	c	: Characters you want to add.
- * @retval 0~127	: c ASCII numbers.
- * @retval -1		: Failed to allocate.
+ * @param head
+ * @param fd
  */
-int	ft_putc(t_string *str, char c)
+void	delete_fd_node(t_fd_buffer **head, int fd)
 {
-	char	*tmp;
+	t_fd_buffer	*current;
+	t_fd_buffer	*prev;
 
-	if (str->len + 1 >= str->capa)
+	current = *head;
+	prev = NULL;
+	while (current)
 	{
-		str->capa = (str->len + 1) * 2;
-		tmp = malloc(str->capa);
-		if (!tmp)
-			return (-1);
-		tmp = _strncpy(tmp, str->str, str->len);
-		free(str->str);
-		str->str = tmp;
+		if (current->fd == fd)
+		{
+			if (prev)
+				prev->next = current->next;
+			else
+				*head = current->next;
+			free(current->buffer);
+			free(current);
+			return ;
+		}
+		prev = current;
+		current = current->next;
 	}
-	str->str[str->len] = c;
-	str->len++;
-	return (c);
+}
+
+/**
+ * @brief 引数fdのノードを返します。
+ *
+ * @param head
+ * @param fd
+ * @return t_fd_buffer*
+ */
+t_fd_buffer	*find_fd_node(t_fd_buffer *head, int fd)
+{
+	while (head)
+	{
+		if (head->fd == fd)
+			return (head);
+		head = head->next;
+	}
+	return (NULL);
 }

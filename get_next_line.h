@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/19 13:45:22 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 13:29:48 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,46 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-typedef struct s_fd_state
+// enum
+typedef enum e_status
 {
-	char	buf[BUFFER_SIZE];
-	char	*bufp;
-	ssize_t	n;
-}			t_fd_state;
+	GNL_OK = 0,
+	GNL_NG = 1,
+}						t_status;
+
+typedef struct s_fd_buffer
+{
+	int					fd;
+	char				buffer[BUFFER_SIZE];
+	char				*bufp;
+	size_t				buf_len;
+	struct s_fd_buffer	*next;
+}						t_fd_buffer;
+
+// typedef struct s_fd_state
+// {
+// 	int					fd;
+// 	char				*buf;
+// 	char				*bufp;
+// 	ssize_t				n;
+// 	struct s_fd_state	*next;
+// }						t_fd_state;
 
 typedef struct s_string
 {
-	char	*str;
-	size_t	len;
-	size_t	capa;
-}			t_string;
+	char				*str;
+	size_t				len;
+	size_t				capa;
+}						t_string;
 
-int			ft_getc(int fd);
-int			ft_putc(t_string *str, char c);
-char		*get_next_line(int fd);
+// node control
+t_fd_buffer				*new_fd_node(int fd);
+void					add_fd_node(t_fd_buffer **head, t_fd_buffer *new_node);
+void					delete_fd_node(t_fd_buffer **head, int fd);
+t_fd_buffer				*find_fd_node(t_fd_buffer *head, int fd);
+
+int						ft_getc(int fd);
+int						ft_putc(t_string *str, char c);
+char					*get_next_line(int fd);
 
 #endif
