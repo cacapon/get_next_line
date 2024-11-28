@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 15:18:15 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 15:27:10 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ t_putc_status	ft_getc(t_fd_buffer *fd_buf, unsigned char *cp)
 	fd_buf->buf_len--;
 	if (fd_buf->buf_len < 0)
 		return (PUTC_EOF);
-	cp = (unsigned char)*fd_buf->bufp++;
+	*cp = (unsigned char)*fd_buf->bufp++;
 	return (PUTC_SUCCESS);
 }
 

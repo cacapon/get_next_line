@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 15:24:45 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 15:28:45 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ t_status	delete_fd_node(t_fd_buffer **head, int fd)
 				prev->next = current->next;
 			else
 				*head = current->next;
-			free(current->buffer);
 			free(current);
 			return (GNL_OK);
 		}
