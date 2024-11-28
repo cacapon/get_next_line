@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 16:50:43 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 16:55:51 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,8 @@ char	*get_next_line(int fd)
 	t_putc_status		putc_result;
 
 	current_fd = setup_fd_buffer(fd, &fd_list);
+	if (!current_fd)
+		return (NULL);
 	newline = (t_string){.str = NULL, .len = 0, .capa = 0};
 	while (1)
 	{
