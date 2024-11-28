@@ -5,20 +5,20 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/26 12:51:29 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 12:07:55 by ttsubo           ###   ########.fr       */
+/*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
+/*   Updated: 2024/11/28 12:12:24 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 /**
- * @brief srcの文字列をsrcsizeまでdstにコピーします
+ * @brief Copy src to dst up to strsize characters.
  *
- * @param dst 		: コピー先の文字列用の領域
- * @param src 		: コピーする文字列
- * @param srcsize	: srcのサイズ
- * @return char*	: dstの先頭ポインタ
+ * @param [out] dst		: Destination memory address
+ * @param [in]	src 	: Source string
+ * @param [in]	srcsize	: Number of characters to copy
+ * @return char* 		: dst's top pointer
  */
 static char	*_strncpy(char *dst, const char *src, size_t srcsize)
 {
@@ -31,75 +31,53 @@ static char	*_strncpy(char *dst, const char *src, size_t srcsize)
 }
 
 /**
- * @brief 文字列に改行が含まれているかチェックします
- *
- * @param [in] str		: 検索する文字列
- * @retval STATUS_OK	: 改行が含まれていた
- * @retval STATUS_NG	: 改行が含まれていなかった
+ * @brief Returns one character read from fd for BUFFER_SIZE.
+ * @details
+ * 	The remaining characters are retained.
+ * @param [in] fd 			: file descriptor
+ * @retval int				: One character read
+ * @retval COULD_NOT_READ	:	Couldn't read it
  */
-t_status	ft_contain_linebreak(char *str)
+int	ft_getc(int fd)
 {
-	while (*str)
+	static t_fd_state	state[MAX_FD];
+
+	if (fd < 0)
+		return (COULD_NOT_READ);
+	if (state[fd].n == 0)
 	{
-		if (*str == '\n')
-			return (STATUS_OK);
-		str++;
+		state[fd].n = read(fd, state[fd].buf, sizeof(state[fd].buf));
+		if (state[fd].n <= 0)
+			return (COULD_NOT_READ);
+		state[fd].bufp = state[fd].buf;
 	}
-	return (STATUS_NG);
+	state[fd].n--;
+	return ((unsigned char)*state[fd].bufp++);
 }
 
 /**
- * @brief fd_infoのlineにbufの内容をセットします
+ * @brief Adds the character c to the end of the string str.
  *
- * @param [out]	fd_info	: fdの情報を管理している構造体
- * @retval STATUS_OK	: 正常に読み込めた・読み込む必要がなかった
- * @retval STATUS_NG	: tmpのメモリ割当に失敗した
+ * @param [out]	str	: The string to which the character c is added.
+ * @param [in]	c	: Characters you want to add.
+ * @retval 0~127	: c ASCII numbers.
+ * @retval -1		: Failed to allocate.
  */
-t_status	ft_putline(t_line_info *line_info, t_fd_info *fd_info)
+int	ft_putc(t_string *str, char c)
 {
 	char	*tmp;
 
-	if (line_info->capa < line_info->len + fd_info->buf_len)
+	if (str->len + 1 >= str->capa)
 	{
-		line_info->capa = (line_info->len + fd_info->buf_len) * 2;
-		tmp = malloc(line_info->capa);
+		str->capa = (str->len + 1) * 2;
+		tmp = malloc(str->capa);
 		if (!tmp)
-			return (STATUS_NG);
-		if (line_info->str)
-		{
-			_strncpy(tmp, line_info->str, line_info->len);
-			free(line_info->str);
-		}
-		line_info->str = tmp;
+			return (-1);
+		tmp = _strncpy(tmp, str->str, str->len);
+		free(str->str);
+		str->str = tmp;
 	}
-	while (fd_info->buf_len > 0 && *(fd_info->buf) != '\0')
-	{
-		line_info->str[line_info->len] = *fd_info->buf++;
-		line_info->len++;
-		fd_info->buf_len--;
-		if (*(fd_info->buf - 1) == '\n')
-			break ;
-	}
-	line_info->str[line_info->len] = '\0';
-	return (STATUS_OK);
-}
-
-/**
- * @brief バッファがからの場合,readを使ってbufにセットします。
- *
- * @param [out]	fd_info	: fdの情報を管理している構造体
- * @retval STATUS_OK	: 正常に読み込めた・読み込む必要がなかった
- * @retval STATUS_NG	: fdから読み込めない・readしたが空だった
- */
-t_status	ft_getbuf(t_fd_info *fd_info)
-{
-	if (!fd_info)
-		return (STATUS_NG);
-	if (fd_info->buf_len == 0)
-	{
-		fd_info->buf_len = read(fd_info->fd, fd_info->buf, BUFFER_SIZE);
-		if (fd_info->buf_len <= 0)
-			return (STATUS_NG);
-	}
-	return (STATUS_OK);
+	str->str[str->len] = c;
+	str->len++;
+	return (c);
 }

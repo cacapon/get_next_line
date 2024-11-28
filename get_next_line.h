@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/26 18:10:05 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/19 13:45:22 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,46 +15,27 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 3
 # endif
-
-// using read(), malloc(), free()
+# define MAX_FD 1024
+# define COULD_NOT_READ -1
 # include <stdlib.h>
 # include <unistd.h>
 
-// enum
-typedef enum e_status
+typedef struct s_fd_state
 {
-	STATUS_OK = 0,
-	STATUS_NG = 1,
-}						t_status;
+	char	buf[BUFFER_SIZE];
+	char	*bufp;
+	ssize_t	n;
+}			t_fd_state;
 
-typedef enum e_fd_exist
+typedef struct s_string
 {
-	FD_EXIST = 1,
-	FD_NOT_EXIST = 0
-}						t_fd_exist;
+	char	*str;
+	size_t	len;
+	size_t	capa;
+}			t_string;
 
-struct s_fd_info;
-
-typedef struct s_fd_info
-{
-	int					fd;
-	char				*buf;
-	ssize_t				buf_len;
-	struct s_fd_info	*next;
-}						t_fd_info;
-
-typedef struct s_line_info
-{
-	char				*str;
-	ssize_t				len;
-	ssize_t				capa;
-}						t_line_info;
-
-// prototype
-
-char					*get_next_line(int fd);
-t_status				ft_getbuf(t_fd_info *fd_info);
-t_status				ft_putline(t_line_info *line_info, t_fd_info *fd_info);
-t_status				ft_contain_linebreak(char *str);
+int			ft_getc(int fd);
+int			ft_putc(t_string *str, char c);
+char		*get_next_line(int fd);
 
 #endif
