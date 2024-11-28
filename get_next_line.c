@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 15:56:07 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 16:10:42 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ int	ft_putc(t_string *str, char c)
 
 /**
  * @brief Returns a string of text in fd up to a newline.
- * @param [in] fd	: file descriptor 
+ * @param [in] fd	: file descriptor
  * @retval char* 	: read line
  * @retval NULL		: Could not read or error
  */
@@ -135,19 +135,21 @@ char	*get_next_line(int fd)
 	while (1)
 	{
 		putc_result = ft_getc(current_fd, &byte_read);
-		if (putc_result == PUTC_ERROR)
-		{
-			delete_fd_node(&fd_list, fd);
-			if (newline.str)
-				free(newline.str);
-			return (NULL);
-		}
-		if (putc_result == PUTC_EOF)
-			break;
+		if (putc_result != PUTC_SUCCESS)
+			break ;
 		ft_putc(&newline, byte_read);
 		if (byte_read == '\n')
 			break ;
 	}
+	if (putc_result == PUTC_ERROR)
+	{
+		delete_fd_node(&fd_list, fd);
+		if (newline.str)
+			free(newline.str);
+		return (NULL);
+	}
+	if (putc_result == PUTC_EOF)
+		delete_fd_node(&fd_list, fd);
 	if (newline.len > 0)
 		ft_putc(&newline, '\0');
 	return (newline.str);
