@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 13:30:12 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 13:53:49 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,11 @@ static char	*_strncpy(char *dst, const char *src, size_t srcsize)
 
 static t_fd_buffer	*_setup_fd_buffer(int fd, t_fd_buffer **fd_list)
 {
-	unsigned int	ui;
-	t_fd_buffer		*current_fd;
+	t_fd_buffer	*current_fd;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	current_fd = find_fd_node(fd_list, fd);
+	current_fd = find_fd_node(*fd_list, fd);
 	if (!current_fd)
 	{
 		current_fd = new_fd_node(fd);
@@ -49,8 +48,6 @@ static t_fd_buffer	*_setup_fd_buffer(int fd, t_fd_buffer **fd_list)
 			return (NULL);
 		add_fd_node(fd_list, current_fd);
 	}
-	while (ui < BUFFER_SIZE)
-		current_fd->buffer[ui++] = '\0';
 	return (current_fd);
 }
 
@@ -111,11 +108,16 @@ char	*get_next_line(int fd)
 	ssize_t				byte_read;
 
 	current_fd = _setup_fd_buffer(fd, &fd_list);
+	newline = (t_string){NULL, 0, 0};
 	while (1)
 	{
 		byte_read = ft_getc(current_fd);
 		if (byte_read == COULD_NOT_READ)
-			break ;
+		{
+			if (newline.str)
+				free(newline.str);
+			return (NULL);
+		}
 		ft_putc(&newline, byte_read);
 		if (byte_read == '\n')
 			break ;

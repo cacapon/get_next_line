@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 13:29:48 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 13:51:27 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 3
 # endif
-# define MAX_FD 1024
 # define COULD_NOT_READ -1
 # include <stdlib.h>
 # include <unistd.h>
@@ -36,15 +35,6 @@ typedef struct s_fd_buffer
 	struct s_fd_buffer	*next;
 }						t_fd_buffer;
 
-// typedef struct s_fd_state
-// {
-// 	int					fd;
-// 	char				*buf;
-// 	char				*bufp;
-// 	ssize_t				n;
-// 	struct s_fd_state	*next;
-// }						t_fd_state;
-
 typedef struct s_string
 {
 	char				*str;
@@ -58,7 +48,7 @@ void					add_fd_node(t_fd_buffer **head, t_fd_buffer *new_node);
 void					delete_fd_node(t_fd_buffer **head, int fd);
 t_fd_buffer				*find_fd_node(t_fd_buffer *head, int fd);
 
-int						ft_getc(int fd);
+int						ft_getc(t_fd_buffer *fd_buf);
 int						ft_putc(t_string *str, char c);
 char					*get_next_line(int fd);
 

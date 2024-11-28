@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 13:30:24 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 13:58:51 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,16 @@
  */
 t_fd_buffer	*new_fd_node(int fd)
 {
+	size_t		ui;
 	t_fd_buffer	*new_node;
 
 	new_node = malloc(sizeof(t_fd_buffer));
 	if (!new_node)
 		return (NULL);
-	*new_node = (t_fd_buffer){.fd = fd, .buffer = NULL, .next = NULL};
+	*new_node = (t_fd_buffer){.fd = fd, .next = NULL};
+	ui = 0;
+	while (ui < BUFFER_SIZE)
+		new_node->buffer[ui++] = '\0';
 	return (new_node);
 }
 
@@ -34,26 +38,31 @@ t_fd_buffer	*new_fd_node(int fd)
  *
  * @param head
  * @param new_node
+ * @retval GNL_OK: ノード作成成功
+ * @retval GNL_NG: ノード作成失敗
  */
-void	add_fd_node(t_fd_buffer **head, t_fd_buffer *new_node)
+t_status	add_fd_node(t_fd_buffer **head, t_fd_buffer *new_node)
 {
 	if (!head || !new_node)
-		return ;
+		return (GNL_NG);
 	new_node->next = *head;
 	*head = new_node;
+	return (GNL_OK);
 }
 
 /**
  * @brief 指定したfdのノードを削除します。
  *
- * @param head
- * @param fd
+ * @param head    		: ファイルディスクリプタノードのリストの先頭
+ * @param fd      		: 検索対象のファイルディスクリプタ
  */
-void	delete_fd_node(t_fd_buffer **head, int fd)
+t_status	delete_fd_node(t_fd_buffer **head, int fd)
 {
 	t_fd_buffer	*current;
 	t_fd_buffer	*prev;
 
+	if (!head || !*head)
+		return (GNL_NG);
 	current = *head;
 	prev = NULL;
 	while (current)
@@ -66,19 +75,21 @@ void	delete_fd_node(t_fd_buffer **head, int fd)
 				*head = current->next;
 			free(current->buffer);
 			free(current);
-			return ;
+			return (GNL_OK);
 		}
 		prev = current;
 		current = current->next;
 	}
+	return (GNL_NG);
 }
 
 /**
- * @brief 引数fdのノードを返します。
+ * @brief 引数fdのノードを検索し、ポインタを返します。
  *
- * @param head
- * @param fd
- * @return t_fd_buffer*
+ * @param head    		: ファイルディスクリプタノードのリストの先頭
+ * @param fd      		: 検索対象のファイルディスクリプタ
+ * @retval t_fd_buffer* : 見つかったノードのポインタ（成功）
+ * @retval NULL         : ノードが見つからない場合
  */
 t_fd_buffer	*find_fd_node(t_fd_buffer *head, int fd)
 {
