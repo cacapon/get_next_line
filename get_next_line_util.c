@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 15:28:45 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 16:47:46 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,4 +99,32 @@ t_fd_buffer	*find_fd_node(t_fd_buffer *head, int fd)
 		head = head->next;
 	}
 	return (NULL);
+}
+
+/**
+ * @brief Set up fd buffer
+ *
+ * @param fd 			: file descripter
+ * @param fd_list		: List of fd_buffer structures
+ * @return t_fd_buffer* : Returns the structure of fd_buffer specified by the fd
+ */
+t_fd_buffer	*setup_fd_buffer(int fd, t_fd_buffer **fd_list)
+{
+	t_fd_buffer	*current_fd;
+
+	if (fd < 0)
+		return (NULL);
+	current_fd = find_fd_node(*fd_list, fd);
+	if (!current_fd)
+	{
+		current_fd = new_fd_node(fd);
+		if (!current_fd)
+			return (NULL);
+		if (add_fd_node(fd_list, current_fd) == GNL_NG)
+		{
+			free(current_fd);
+			return (NULL);
+		}
+	}
+	return (current_fd);
 }

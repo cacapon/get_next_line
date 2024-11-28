@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 16:10:42 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/28 16:47:32 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,31 +33,19 @@ static char	*_strncpy(char *dst, const char *src, size_t srcsize)
 }
 
 /**
- * @brief Set up fd buffer
+ * @brief
  *
- * @param fd 			: file descripter
- * @param fd_list		: List of fd_buffer structures
- * @return t_fd_buffer* : Returns the structure of fd_buffer specified by the fd
+ * @param fd_list
+ * @param newline
+ * @param fd
+ * @return char*
  */
-static t_fd_buffer	*_setup_fd_buffer(int fd, t_fd_buffer **fd_list)
+static char	*handle_error(t_fd_buffer **fd_list, t_string *newline, int fd)
 {
-	t_fd_buffer	*current_fd;
-
-	if (fd < 0)
-		return (NULL);
-	current_fd = find_fd_node(*fd_list, fd);
-	if (!current_fd)
-	{
-		current_fd = new_fd_node(fd);
-		if (!current_fd)
-			return (NULL);
-		if (add_fd_node(fd_list, current_fd) == GNL_NG)
-		{
-			free(current_fd);
-			return (NULL);
-		}
-	}
-	return (current_fd);
+	delete_fd_node(fd_list, fd);
+	if (newline->str)
+		free(newline->str);
+	return (NULL);
 }
 
 /**
@@ -130,27 +118,20 @@ char	*get_next_line(int fd)
 	unsigned char		byte_read;
 	t_putc_status		putc_result;
 
-	current_fd = _setup_fd_buffer(fd, &fd_list);
-	newline = (t_string){NULL, 0, 0};
+	current_fd = setup_fd_buffer(fd, &fd_list);
+	newline = (t_string){.str = NULL, .len = 0, .capa = 0};
 	while (1)
 	{
 		putc_result = ft_getc(current_fd, &byte_read);
-		if (putc_result != PUTC_SUCCESS)
+		if (putc_result == PUTC_ERROR)
+			return (handle_error(fd_list, &newline, fd));
+		if (putc_result == PUTC_EOF || byte_read == '\n')
 			break ;
 		ft_putc(&newline, byte_read);
-		if (byte_read == '\n')
-			break ;
 	}
-	if (putc_result == PUTC_ERROR)
-	{
-		delete_fd_node(&fd_list, fd);
-		if (newline.str)
-			free(newline.str);
-		return (NULL);
-	}
-	if (putc_result == PUTC_EOF)
-		delete_fd_node(&fd_list, fd);
 	if (newline.len > 0)
 		ft_putc(&newline, '\0');
+	if (putc_result == PUTC_EOF)
+		delete_fd_node(&fd_list, fd);
 	return (newline.str);
 }
