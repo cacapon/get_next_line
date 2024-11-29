@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/29 13:18:24 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/29 14:51:18 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,9 @@ int	ft_putc(t_string *str, char c, t_getc_sts sts)
 {
 	char	*tmp;
 
-	if (sts != GETC_OK)
+	if (sts == GETC_EOF)
+		return (PUTC_OK);
+	if (sts == GETC_ERR)
 		return (PUTC_ERR);
 	if (str->len + 1 >= str->capa)
 	{
@@ -130,12 +132,12 @@ char	*get_next_line(int fd)
 		set_sts(&result);
 		if (result.gnl_sts == GNL_ERR)
 			return (handle_error(&fd_list, &newline, fd));
-		if (result.gnl_sts == GETC_EOF || byte_read == '\n')
+		if (result.gnl_sts == GNL_EOF || byte_read == '\n')
 			break ;
 	}
 	if (newline.len > 0)
 		ft_putc(&newline, '\0', result.getc_sts);
-	if (result.getc_sts == GETC_EOF)
+	if (result.gnl_sts == GNL_EOF)
 		delete_fd_node(&fd_list, fd);
 	return (newline.str);
 }

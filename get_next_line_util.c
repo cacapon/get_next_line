@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/29 13:16:50 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/29 13:40:42 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ t_sts	*set_sts(t_sts *result)
 {
 	if (result->getc_sts == GETC_OK && result->putc_sts == PUTC_OK)
 		result->gnl_sts = GNL_READ;
-	else if (result->getc_sts == GNL_EOF)
+	else if (result->getc_sts == GETC_EOF && result->putc_sts == PUTC_OK)
 		result->gnl_sts = GNL_EOF;
 	else
 		result->gnl_sts = GNL_ERR;
