@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/29 13:15:24 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/29 13:17:03 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,7 @@ t_fd_buf			*new_fd_node(int fd);
 int					add_fd_node(t_fd_buf **head, t_fd_buf *new_node);
 int					delete_fd_node(t_fd_buf **head, int fd);
 t_fd_buf			*setup_fd_buf(int fd, t_fd_buf **fd_list);
-t_sts				*set_sts(t_sts *result, t_getc_sts getc_sts,
-						t_putc_sts putc_sts);
+t_sts				*set_sts(t_sts *result);
 
 // get_next_line
 t_putc_sts			ft_getc(t_fd_buf *fd_buf, unsigned char *cp);

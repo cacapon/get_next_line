@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/29 13:15:03 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/29 13:16:50 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,11 @@ int	delete_fd_node(t_fd_buf **head, int fd)
 	return (GNL_NG);
 }
 
-t_sts	*set_sts(t_sts *result, t_getc_sts getc_sts, t_putc_sts putc_sts)
+t_sts	*set_sts(t_sts *result)
 {
-	if (getc_sts == GETC_OK && putc_sts == PUTC_OK)
+	if (result->getc_sts == GETC_OK && result->putc_sts == PUTC_OK)
 		result->gnl_sts = GNL_READ;
-	else if (getc_sts == GNL_EOF)
+	else if (result->getc_sts == GNL_EOF)
 		result->gnl_sts = GNL_EOF;
 	else
 		result->gnl_sts = GNL_ERR;
