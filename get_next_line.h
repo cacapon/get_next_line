@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/29 13:07:25 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/29 13:11:13 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,16 @@ typedef enum e_gnl_sts
 // State management enum for getc
 typedef enum e_getc_sts
 {
-	GETC_ERROR = -1,
+	GETC_ERR = -1,
 	GETC_EOF = 0,
-	GETC_SUCCESS = 1,
+	GETC_OK = 1,
 }					t_getc_sts;
 
 // State management enum for putc
 typedef enum e_putc_sts
 {
-	PUTC_ERROR = -1,
-	PUTC_SUCCESS = 1,
+	PUTC_ERR = -1,
+	PUTC_OK = 1,
 }					t_putc_sts;
 
 // struct
@@ -72,12 +72,12 @@ typedef struct s_string
 	size_t			capa;
 }					t_string;
 
-// node control
+// util function
 t_fd_buf			*new_fd_node(int fd);
 int					add_fd_node(t_fd_buf **head, t_fd_buf *new_node);
 int					delete_fd_node(t_fd_buf **head, int fd);
-t_fd_buf			*find_fd_node(t_fd_buf *head, int fd);
 t_fd_buf			*setup_fd_buf(int fd, t_fd_buf **fd_list);
+
 
 // get_next_line
 t_putc_sts			ft_getc(t_fd_buf *fd_buf, unsigned char *cp);
