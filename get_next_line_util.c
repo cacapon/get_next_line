@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 17:56:42 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/29 12:36:38 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,25 +90,6 @@ int	delete_fd_node(t_fd_buffer **head, int fd)
 }
 
 /**
- * @brief Searches for a node in argument fd and returns a pointer to it.
- *
- * @param head : head of the list of file descriptor nodes
- * @param fd : file descriptor to search
- * @retval t_fd_buffer* : pointer to the found node (success)
- * @retval NULL : if node not found
- */
-t_fd_buffer	*find_fd_node(t_fd_buffer *head, int fd)
-{
-	while (head)
-	{
-		if (head->fd == fd)
-			return (head);
-		head = head->next;
-	}
-	return (NULL);
-}
-
-/**
  * @brief Set up fd buffer
  *
  * @param fd 			: file descripter
@@ -118,10 +99,14 @@ t_fd_buffer	*find_fd_node(t_fd_buffer *head, int fd)
 t_fd_buffer	*setup_fd_buffer(int fd, t_fd_buffer **fd_list)
 {
 	t_fd_buffer	*current_fd;
+	t_fd_buffer	*head;
 
 	if (fd < 0)
 		return (NULL);
-	current_fd = find_fd_node(*fd_list, fd);
+	head = *fd_list;
+	while (head && head->fd != fd)
+		head = head->next;
+	current_fd = head;
 	if (!current_fd)
 	{
 		current_fd = new_fd_node(fd);
