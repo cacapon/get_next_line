@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/29 13:06:43 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/29 13:07:31 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	ft_getc(t_fd_buf *fd_buf, unsigned char *cp)
  * @retval 0~127	: c ASCII numbers.
  * @retval -1		: Failed to allocate.
  */
-int	ft_putc(t_string *str, char c, t_getc_status sts)
+int	ft_putc(t_string *str, char c, t_getc_sts sts)
 {
 	char	*tmp;
 
@@ -117,7 +117,7 @@ char	*get_next_line(int fd)
 	t_fd_buf		*current_fd;
 	t_string		newline;
 	unsigned char	byte_read;
-	t_status		result;
+	t_sts			result;
 
 	current_fd = setup_fd_buf(fd, &fd_list);
 	if (!current_fd)
