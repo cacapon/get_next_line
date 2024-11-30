@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/30 13:08:12 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/30 13:13:50 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,14 @@ static char	*_ft_strncpy(char *dst, const char *src, size_t srcsize)
 }
 
 /**
- * @brief
+ * @brief Error handling for get_next_line
  *
- * @param fd_list
- * @param newline
- * @param fd
- * @return char*
+ * @param [out]	fd_list	: file descriptor structure list.
+ * @param [out]	newline	: string structure
+ * @param [in]	fd		: file descriptor
+ * @retval void*		: NULL
  */
-static char	*handle_error(t_fd_buf **fd_list, t_string *newline, int fd)
+static void	*handle_error(t_fd_buf **fd_list, t_string *newline, int fd)
 {
 	delete_fd_node(fd_list, fd);
 	if (newline->str)
@@ -53,8 +53,8 @@ static char	*handle_error(t_fd_buf **fd_list, t_string *newline, int fd)
  *
  * @param fd_buf		: fd_buf structures
  * @param cp			: Pointer to character variable
- * @retval PUTC_OK	: Letter C was obtained from buf
- * @retval PUTC_ERR	: Failure to obtain character c
+ * @retval PUTC_OK		: Letter C was obtained from buf
+ * @retval PUTC_ERR		: Failure to obtain character c
  * @retval PUTC_EOF		: Reach EOF
  */
 static int	_ft_getc(t_fd_buf *fd_buf, unsigned char *cp)
@@ -80,9 +80,9 @@ static int	_ft_getc(t_fd_buf *fd_buf, unsigned char *cp)
  * 
  * @param [out]	str	: The string to which the character c is added.
  * @param [in]	c	: Characters you want to add.
- * @param sts 
+ * @param sts 		: getc status.
  * @retval PUTC_OK	: you was able to add one character to the line.
- * @retval PUTC_ERR	: 
+ * @retval PUTC_ERR	: Memory allocation failure/putc failed
  */
 static int	_ft_putc(t_string *str, char c, t_getc_sts sts)
 {
