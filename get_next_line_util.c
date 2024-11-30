@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/30 11:56:46 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/30 12:05:28 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static t_fd_buf	*_new_fd_node(int fd)
  * @retval GNL_OK	: node creation succeeded
  * @retval GNL_NG	: Node creation failure
  */
-static int	add_fd_node(t_fd_buf **head, t_fd_buf *new_node)
+static int	_add_fd_node(t_fd_buf **head, t_fd_buf *new_node)
 {
 	if (!head || !new_node)
 		return (GNL_NG);
@@ -79,7 +79,8 @@ int	delete_fd_node(t_fd_buf **head, int fd)
 				prev->next = current->next;
 			else
 				*head = current->next;
-			free(current->buf);
+			if (current->buf)
+				free(current->buf);
 			free(current);
 			return (GNL_OK);
 		}
@@ -120,13 +121,12 @@ t_fd_buf	*setup_fd_buf(int fd, t_fd_buf **fd_list)
 	current_fd = head;
 	if (!current_fd)
 	{
-		current_fd = new_fd_node(fd);
+		current_fd = _new_fd_node(fd);
 		if (!current_fd)
 			return (NULL);
-		if (add_fd_node(fd_list, current_fd) == GNL_NG)
+		if (_add_fd_node(fd_list, current_fd) == GNL_NG)
 		{
-			free(current_fd->buf);
-			free(current_fd);
+			delete_fd_node(fd_list, fd);
 			return (NULL);
 		}
 	}
