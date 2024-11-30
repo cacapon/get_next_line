@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/28 18:01:56 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/30 13:23:11 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 3
 # endif
+# include <errno.h>
 # include <stdlib.h>
 # include <unistd.h>
 
@@ -23,65 +24,64 @@
 # endif
 
 // enum
-
-// Generic state management enum
-typedef enum e_gnl_status
+typedef enum e_gnl_common_sts
 {
 	GNL_OK = 0,
 	GNL_NG = 1,
-}						t_gnl_status;
+}					t_gnl_common_sts;
 
-// State management enum for getc
-typedef enum e_getc_status
+typedef enum e_gnl_sts
 {
-	GETC_ERROR = -1,
+	GNL_INIT,
+	GNL_READ,
+	GNL_EOF,
+	GNL_ERR,
+}					t_gnl_sts;
+
+typedef enum e_getc_sts
+{
+	GETC_ERR = -1,
 	GETC_EOF = 0,
-	GETC_SUCCESS = 1,
-}						t_getc_status;
+	GETC_OK = 1,
+}					t_getc_sts;
 
-//State management enum for putc
-typedef enum e_putc_status
+typedef enum e_putc_sts
 {
-	PUTC_ERROR = -1,
-	PUTC_SUCCESS = 1,
-}						t_putc_status;
+	PUTC_ERR = -1,
+	PUTC_OK = 1,
+}					t_putc_sts;
 
 // struct
 
-// state-controlling structure
-typedef struct s_status
+typedef struct s_sts
 {
-	t_gnl_status		gnl_sts;
-	t_getc_status		getc_sts;
-	t_putc_status		putc_sts;
-}						t_status;
+	t_gnl_sts		gnl_sts;
+	t_getc_sts		getc_sts;
+	t_putc_sts		putc_sts;
+}					t_sts;
 
-typedef struct s_fd_buffer
+typedef struct s_fd_buf
 {
-	int					fd;
-	char				*buffer;
-	char				*bufp;
-	size_t				buf_len;
-	struct s_fd_buffer	*next;
-}						t_fd_buffer;
+	int				fd;
+	char			*buf;
+	char			*bufp;
+	size_t			buf_len;
+	struct s_fd_buf	*next;
+}					t_fd_buf;
 
 typedef struct s_string
 {
-	char				*str;
-	size_t				len;
-	size_t				capa;
-}						t_string;
+	char			*str;
+	size_t			len;
+	size_t			capa;
+}					t_string;
 
-// node control
-t_fd_buffer				*new_fd_node(int fd);
-int						add_fd_node(t_fd_buffer **head, t_fd_buffer *new_node);
-int						delete_fd_node(t_fd_buffer **head, int fd);
-t_fd_buffer				*find_fd_node(t_fd_buffer *head, int fd);
-t_fd_buffer				*setup_fd_buffer(int fd, t_fd_buffer **fd_list);
+// util function
+int					delete_fd_node(t_fd_buf **head, int fd);
+t_fd_buf			*setup_fd_buf(int fd, t_fd_buf **fd_list);
+t_sts				*set_sts(t_sts *result);
 
 // get_next_line
-t_putc_status			ft_getc(t_fd_buffer *fd_buf, unsigned char *cp);
-int						ft_putc(t_string *str, char c, t_getc_status sts);
-char					*get_next_line(int fd);
+char				*get_next_line(int fd);
 
 #endif
