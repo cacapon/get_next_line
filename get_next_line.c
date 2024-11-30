@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/29 14:51:18 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/30 12:57:00 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ int	ft_getc(t_fd_buf *fd_buf, unsigned char *cp)
 int	ft_putc(t_string *str, char c, t_getc_sts sts)
 {
 	char	*tmp;
+	size_t	i;
 
 	if (sts == GETC_EOF)
 		return (PUTC_OK);
@@ -97,7 +98,10 @@ int	ft_putc(t_string *str, char c, t_getc_sts sts)
 		tmp = malloc(str->capa);
 		if (!tmp)
 			return (PUTC_ERR);
-		tmp = _strncpy(tmp, str->str, str->len);
+		i = 0;
+		while (i < str->capa)
+			tmp[i++] = 0;
+		_strncpy(tmp, str->str, str->len);
 		tmp[str->len] = '\0';
 		free(str->str);
 		str->str = tmp;
