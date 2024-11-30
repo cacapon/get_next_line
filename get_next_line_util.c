@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/29 13:40:42 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/30 11:48:38 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ t_fd_buf	*setup_fd_buf(int fd, t_fd_buf **fd_list)
 	t_fd_buf	*current_fd;
 	t_fd_buf	*head;
 
-	if (fd < 0)
+	if (read(fd, NULL, 0) == -1 && errno == EBADF)
 		return (NULL);
 	head = *fd_list;
 	while (head && head->fd != fd)
