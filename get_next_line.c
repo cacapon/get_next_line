@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/30 12:57:00 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/30 13:05:42 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
  * @param [in]	srcsize	: Number of characters to copy
  * @return char* 		: dst's top pointer
  */
-static char	*_strncpy(char *dst, const char *src, size_t srcsize)
+static char	*_ft_strncpy(char *dst, const char *src, size_t srcsize)
 {
 	size_t	i;
 
@@ -77,11 +77,12 @@ int	ft_getc(t_fd_buf *fd_buf, unsigned char *cp)
 
 /**
  * @brief Adds the character c to the end of the string str.
- *
+ * 
  * @param [out]	str	: The string to which the character c is added.
  * @param [in]	c	: Characters you want to add.
- * @retval 0~127	: c ASCII numbers.
- * @retval -1		: Failed to allocate.
+ * @param sts 
+ * @retval PUTC_OK	: you was able to add one character to the line.
+ * @retval PUTC_ERR	: 
  */
 int	ft_putc(t_string *str, char c, t_getc_sts sts)
 {
@@ -101,7 +102,7 @@ int	ft_putc(t_string *str, char c, t_getc_sts sts)
 		i = 0;
 		while (i < str->capa)
 			tmp[i++] = 0;
-		_strncpy(tmp, str->str, str->len);
+		_ft_strncpy(tmp, str->str, str->len);
 		tmp[str->len] = '\0';
 		free(str->str);
 		str->str = tmp;
