@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/30 11:48:38 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/30 11:56:46 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
  * @param fd			: file descriptor
  * @retval t_fd_buf*	: fd_buf structures
  */
-t_fd_buf	*new_fd_node(int fd)
+static t_fd_buf	*_new_fd_node(int fd)
 {
 	size_t		ui;
 	t_fd_buf	*new_node;
@@ -47,7 +47,7 @@ t_fd_buf	*new_fd_node(int fd)
  * @retval GNL_OK	: node creation succeeded
  * @retval GNL_NG	: Node creation failure
  */
-int	add_fd_node(t_fd_buf **head, t_fd_buf *new_node)
+static int	add_fd_node(t_fd_buf **head, t_fd_buf *new_node)
 {
 	if (!head || !new_node)
 		return (GNL_NG);
@@ -125,6 +125,7 @@ t_fd_buf	*setup_fd_buf(int fd, t_fd_buf **fd_list)
 			return (NULL);
 		if (add_fd_node(fd_list, current_fd) == GNL_NG)
 		{
+			free(current_fd->buf);
 			free(current_fd);
 			return (NULL);
 		}
