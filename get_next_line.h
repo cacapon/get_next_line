@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/30 11:57:14 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/30 13:08:20 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,6 @@ t_fd_buf			*setup_fd_buf(int fd, t_fd_buf **fd_list);
 t_sts				*set_sts(t_sts *result);
 
 // get_next_line
-t_putc_sts			ft_getc(t_fd_buf *fd_buf, unsigned char *cp);
-int					ft_putc(t_string *str, char c, t_getc_sts sts);
 char				*get_next_line(int fd);
 
 #endif
