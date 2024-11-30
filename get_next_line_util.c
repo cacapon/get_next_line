@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/30 12:05:28 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/30 13:17:02 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,12 @@ int	delete_fd_node(t_fd_buf **head, int fd)
 	return (GNL_NG);
 }
 
+/**
+ * @brief Set the sts object
+ *
+ * @param [out]	result	: state-management structure
+ * @return t_sts*		: Same as argument
+ */
 t_sts	*set_sts(t_sts *result)
 {
 	if (result->getc_sts == GETC_OK && result->putc_sts == PUTC_OK)
@@ -106,7 +112,7 @@ t_sts	*set_sts(t_sts *result)
  *
  * @param fd 			: file descripter
  * @param fd_list		: List of fd_buf structures
- * @return t_fd_buf* : Returns the structure of fd_buf specified by the fd
+ * @return t_fd_buf*	: Returns the structure of fd_buf specified by the fd
  */
 t_fd_buf	*setup_fd_buf(int fd, t_fd_buf **fd_list)
 {

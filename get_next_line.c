@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/30 12:57:00 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/30 13:13:50 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
  * @param [in]	srcsize	: Number of characters to copy
  * @return char* 		: dst's top pointer
  */
-static char	*_strncpy(char *dst, const char *src, size_t srcsize)
+static char	*_ft_strncpy(char *dst, const char *src, size_t srcsize)
 {
 	size_t	i;
 
@@ -33,14 +33,14 @@ static char	*_strncpy(char *dst, const char *src, size_t srcsize)
 }
 
 /**
- * @brief
+ * @brief Error handling for get_next_line
  *
- * @param fd_list
- * @param newline
- * @param fd
- * @return char*
+ * @param [out]	fd_list	: file descriptor structure list.
+ * @param [out]	newline	: string structure
+ * @param [in]	fd		: file descriptor
+ * @retval void*		: NULL
  */
-static char	*handle_error(t_fd_buf **fd_list, t_string *newline, int fd)
+static void	*handle_error(t_fd_buf **fd_list, t_string *newline, int fd)
 {
 	delete_fd_node(fd_list, fd);
 	if (newline->str)
@@ -53,11 +53,11 @@ static char	*handle_error(t_fd_buf **fd_list, t_string *newline, int fd)
  *
  * @param fd_buf		: fd_buf structures
  * @param cp			: Pointer to character variable
- * @retval PUTC_OK	: Letter C was obtained from buf
- * @retval PUTC_ERR	: Failure to obtain character c
+ * @retval PUTC_OK		: Letter C was obtained from buf
+ * @retval PUTC_ERR		: Failure to obtain character c
  * @retval PUTC_EOF		: Reach EOF
  */
-int	ft_getc(t_fd_buf *fd_buf, unsigned char *cp)
+static int	_ft_getc(t_fd_buf *fd_buf, unsigned char *cp)
 {
 	if (fd_buf->fd < 0)
 		return (GETC_ERR);
@@ -77,13 +77,14 @@ int	ft_getc(t_fd_buf *fd_buf, unsigned char *cp)
 
 /**
  * @brief Adds the character c to the end of the string str.
- *
+ * 
  * @param [out]	str	: The string to which the character c is added.
  * @param [in]	c	: Characters you want to add.
- * @retval 0~127	: c ASCII numbers.
- * @retval -1		: Failed to allocate.
+ * @param sts 		: getc status.
+ * @retval PUTC_OK	: you was able to add one character to the line.
+ * @retval PUTC_ERR	: Memory allocation failure/putc failed
  */
-int	ft_putc(t_string *str, char c, t_getc_sts sts)
+static int	_ft_putc(t_string *str, char c, t_getc_sts sts)
 {
 	char	*tmp;
 	size_t	i;
@@ -101,7 +102,7 @@ int	ft_putc(t_string *str, char c, t_getc_sts sts)
 		i = 0;
 		while (i < str->capa)
 			tmp[i++] = 0;
-		_strncpy(tmp, str->str, str->len);
+		_ft_strncpy(tmp, str->str, str->len);
 		tmp[str->len] = '\0';
 		free(str->str);
 		str->str = tmp;
@@ -131,8 +132,8 @@ char	*get_next_line(int fd)
 	newline = (t_string){.str = NULL, .len = 0, .capa = 0};
 	while (1)
 	{
-		result.getc_sts = ft_getc(current_fd, &byte_read);
-		result.putc_sts = ft_putc(&newline, byte_read, result.getc_sts);
+		result.getc_sts = _ft_getc(current_fd, &byte_read);
+		result.putc_sts = _ft_putc(&newline, byte_read, result.getc_sts);
 		set_sts(&result);
 		if (result.gnl_sts == GNL_ERR)
 			return (handle_error(&fd_list, &newline, fd));
@@ -140,7 +141,7 @@ char	*get_next_line(int fd)
 			break ;
 	}
 	if (newline.len > 0)
-		ft_putc(&newline, '\0', result.getc_sts);
+		_ft_putc(&newline, '\0', result.getc_sts);
 	if (result.gnl_sts == GNL_EOF)
 		delete_fd_node(&fd_list, fd);
 	return (newline.str);

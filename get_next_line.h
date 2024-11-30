@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/30 11:57:14 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/11/30 13:20:00 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,15 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 3
 # endif
+# include <errno.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include <errno.h>
 
 # if BUFFER_SIZE <= 0
 #  error "BUFFER_SIZE must be greater than 0"
 # endif
 
 // enum
-
-// Generic state management enum
 typedef enum e_gnl_common_sts
 {
 	GNL_OK = 0,
@@ -40,7 +38,6 @@ typedef enum e_gnl_sts
 	GNL_ERR,
 }					t_gnl_sts;
 
-// State management enum for getc
 typedef enum e_getc_sts
 {
 	GETC_ERR = -1,
@@ -48,7 +45,6 @@ typedef enum e_getc_sts
 	GETC_OK = 1,
 }					t_getc_sts;
 
-// State management enum for putc
 typedef enum e_putc_sts
 {
 	PUTC_ERR = -1,
@@ -57,7 +53,6 @@ typedef enum e_putc_sts
 
 // struct
 
-// state-controlling structure
 typedef struct s_sts
 {
 	t_gnl_sts		gnl_sts;
@@ -87,8 +82,6 @@ t_fd_buf			*setup_fd_buf(int fd, t_fd_buf **fd_list);
 t_sts				*set_sts(t_sts *result);
 
 // get_next_line
-t_putc_sts			ft_getc(t_fd_buf *fd_buf, unsigned char *cp);
-int					ft_putc(t_string *str, char c, t_getc_sts sts);
 char				*get_next_line(int fd);
 
 #endif
