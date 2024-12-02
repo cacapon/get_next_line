@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/30 13:23:16 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/02 22:26:31 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static int	_ft_getc(t_fd_buf *fd_buf, unsigned char *cp)
 		return (GETC_ERR);
 	if (fd_buf->buf_len == 0)
 	{
-		fd_buf->buf_len = read(fd_buf->fd, fd_buf->buf, sizeof(fd_buf->buf));
+		fd_buf->buf_len = read(fd_buf->fd, fd_buf->buf, BUFFER_SIZE);
 		if (fd_buf->buf_len < 0)
 			return (GETC_ERR);
 		if (fd_buf->buf_len == 0)
