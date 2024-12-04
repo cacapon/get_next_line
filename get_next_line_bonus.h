@@ -65,7 +65,7 @@ typedef struct s_fd_buf
 	int				fd;
 	char			*buf;
 	char			*bufp;
-	size_t			buf_len;
+	ssize_t			buf_len;
 	struct s_fd_buf	*next;
 }					t_fd_buf;
 
