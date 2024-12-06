@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/06 11:11:28 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/06 11:30:30 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static char	*_ft_strncpy(char *dst, const char *src, size_t srcsize)
  * @param [in]	fd		: file descriptor
  * @retval void*		: NULL
  */
-static void	*handle_error(t_fd_buf **fd_list, t_string *newline, int fd)
+static void	*_handle_error(t_fd_buf **fd_list, t_string *newline, int fd)
 {
 	delete_fd_node(fd_list, fd);
 	if (newline->str)
@@ -136,7 +136,7 @@ char	*get_next_line(int fd)
 		result.putc_sts = _ft_putc(&newline, byte_read, result.getc_sts);
 		set_sts(&result);
 		if (result.gnl_sts == GNL_ERR)
-			return (handle_error(&fd_list, &newline, fd));
+			return (_handle_error(&fd_list, &newline, fd));
 		if (result.gnl_sts == GNL_EOF || byte_read == '\n')
 			break ;
 	}
