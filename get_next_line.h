@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/11/30 13:20:00 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/06 11:05:29 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,8 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 3
 # endif
-# include <errno.h>
 # include <stdlib.h>
 # include <unistd.h>
-
-# if BUFFER_SIZE <= 0
-#  error "BUFFER_SIZE must be greater than 0"
-# endif
 
 // enum
 typedef enum e_gnl_common_sts

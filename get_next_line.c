@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/02 22:22:26 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/06 11:07:16 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ static void	*handle_error(t_fd_buf **fd_list, t_string *newline, int fd)
  */
 static int	_ft_getc(t_fd_buf *fd_buf, unsigned char *cp)
 {
-	if (fd_buf->fd < 0)
+
+	if (read(fd_buf->fd, NULL, 0) == -1)
 		return (GETC_ERR);
 	if (fd_buf->buf_len == 0)
 	{
