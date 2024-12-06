@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/06 11:08:21 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/06 11:11:28 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ char	*get_next_line(int fd)
 	t_sts			result;
 
 	current_fd = setup_fd_buf(fd, &fd_list);
-	if (!current_fd)
+	if (!current_fd || BUFFER_SIZE <= 0)
 		return (NULL);
 	newline = (t_string){.str = NULL, .len = 0, .capa = 0};
 	while (1)
