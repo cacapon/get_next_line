@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/06 11:07:16 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/06 11:08:21 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ static void	*handle_error(t_fd_buf **fd_list, t_string *newline, int fd)
  */
 static int	_ft_getc(t_fd_buf *fd_buf, unsigned char *cp)
 {
-
 	if (read(fd_buf->fd, NULL, 0) == -1)
 		return (GETC_ERR);
 	if (fd_buf->buf_len == 0)
@@ -78,7 +77,7 @@ static int	_ft_getc(t_fd_buf *fd_buf, unsigned char *cp)
 
 /**
  * @brief Adds the character c to the end of the string str.
- * 
+ *
  * @param [out]	str	: The string to which the character c is added.
  * @param [in]	c	: Characters you want to add.
  * @param sts 		: getc status.
