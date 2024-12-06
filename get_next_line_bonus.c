@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/02 22:26:31 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/06 11:25:57 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static void	*handle_error(t_fd_buf **fd_list, t_string *newline, int fd)
  */
 static int	_ft_getc(t_fd_buf *fd_buf, unsigned char *cp)
 {
-	if (fd_buf->fd < 0)
+	if (read(fd_buf->fd, NULL, 0) == -1)
 		return (GETC_ERR);
 	if (fd_buf->buf_len == 0)
 	{
@@ -77,7 +77,7 @@ static int	_ft_getc(t_fd_buf *fd_buf, unsigned char *cp)
 
 /**
  * @brief Adds the character c to the end of the string str.
- * 
+ *
  * @param [out]	str	: The string to which the character c is added.
  * @param [in]	c	: Characters you want to add.
  * @param sts 		: getc status.
@@ -127,7 +127,7 @@ char	*get_next_line(int fd)
 	t_sts			result;
 
 	current_fd = setup_fd_buf(fd, &fd_list);
-	if (!current_fd)
+	if (!current_fd || BUFFER_SIZE <= 0)
 		return (NULL);
 	newline = (t_string){.str = NULL, .len = 0, .capa = 0};
 	while (1)
