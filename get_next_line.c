@@ -6,59 +6,11 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/07 16:38:33 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 16:54:00 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-/**
- * @brief Copy src to dst up to strsize characters.
- *
- * @param [out] dst		: Destination memory address
- * @param [in]	src 	: Source string
- * @param [in]	srcsize	: Number of characters to copy
- * @return char* 		: dst's top pointer
- */
-static char	*_ft_strncpy(char *dst, const char *src, size_t srcsize)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < srcsize && *src)
-		dst[i++] = *src++;
-	if (i < srcsize)
-		dst[i] = '\0';
-	return (dst);
-}
-
-static void	*_ft_memset(void *b, int c, size_t len)
-{
-	size_t			i;
-	unsigned char	*ptr;
-
-	i = 0;
-	ptr = (unsigned char *)b;
-	while (i < len)
-		ptr[i++] = (unsigned char)c;
-	return (b);
-}
-
-// /**
-//  * @brief Error handling for get_next_line
-//  *
-//  * @param [out]	fd_list	: file descriptor structure list.
-//  * @param [out]	newline	: string structure
-//  * @param [in]	fd		: file descriptor
-//  * @retval void*		: NULL
-//  */
-// static void	*_handle_error(t_fd_buf **fd_list, t_string *newline, int fd)
-// {
-// 	delete_fd_node(fd_list, fd);
-// 	if (newline->str)
-// 		free(newline->str);
-// 	return (NULL);
-//}
 
 /**
  * @brief one character from buf and stores it in variable c.
@@ -109,8 +61,8 @@ static int	_ft_putc(t_string *line, char c, t_getc_sts sts)
 		tmp = malloc(line->capa);
 		if (!tmp)
 			return (PUTC_ERR);
-		_ft_memset(tmp, 0, line->capa);
-		_ft_strncpy(tmp, line->str, line->len);
+		gnl_memset(tmp, 0, line->capa);
+		gnl_strncpy(tmp, line->str, line->len);
 		tmp[line->len] = '\0';
 		free(line->str);
 		line->str = tmp;
@@ -120,6 +72,13 @@ static int	_ft_putc(t_string *line, char c, t_getc_sts sts)
 	return (PUTC_OK);
 }
 
+/**
+ * @brief 
+ * 
+ * @param s_buf 
+ * @param fd 
+ * @return t_buf* 
+ */
 static t_buf	*_ft_buf_init(t_buf **s_buf, int fd)
 {
 	if (!s_buf)
@@ -136,12 +95,33 @@ static t_buf	*_ft_buf_init(t_buf **s_buf, int fd)
 			*s_buf = NULL;
 			return (NULL);
 		}
-		_ft_memset((*s_buf)->buf, 0, BUFFER_SIZE);
+		gnl_memset((*s_buf)->buf, 0, BUFFER_SIZE);
 		(*s_buf)->buf_len = 0;
 		(*s_buf)->bufp = (*s_buf)->buf;
 		(*s_buf)->fd = fd;
 	}
 	return (*s_buf);
+}
+
+/**
+ * @brief 
+ * 
+ * @param s_buf 
+ */
+static void	_ft_buf_free(t_buf **s_buf)
+{
+	if (!s_buf)
+		return (NULL);
+	if (*s_buf)
+	{
+		if ((*s_buf)->buf)
+		{
+			free((*s_buf)->buf);
+			(*s_buf)->buf = NULL;
+		}
+		free(*s_buf);
+		*s_buf = NULL;
+	}
 }
 
 /**
@@ -175,6 +155,6 @@ char	*get_next_line(int fd)
 	if (newline.len > 0)
 		_ft_putc(&newline, '\0', result.getc_sts);
 	if (result.gnl_sts == GNL_EOF)
-		;
+		_ft_buf_free(&buf[fd]);
 	return (newline.str);
 }
