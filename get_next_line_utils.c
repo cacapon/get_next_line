@@ -6,135 +6,108 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/06 11:06:17 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 18:09:17 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 /**
- * @brief create new fd node
+ * @brief srcをdstに文字数srcsizeまでコピーします 
  *
- * @param fd			: file descriptor
- * @retval t_fd_buf*	: fd_buf structures
+ * @param [out] dst		: コピー先の文字列領域
+ * @param [in]	src 	: コピーする文字列
+ * @param [in]	srcsize	: コピーサイズ
+ * @return char* 		: dstの先頭ポインタ
  */
-static t_fd_buf	*_new_fd_node(int fd)
+char	*gnl_strncpy(char *dst, const char *src, size_t srcsize)
 {
-	size_t		ui;
-	t_fd_buf	*new_node;
+	size_t	i;
 
-	new_node = malloc(sizeof(t_fd_buf));
-	if (!new_node)
+	i = 0;
+	while (i < srcsize && *src)
+		dst[i++] = *src++;
+	if (i < srcsize)
+		dst[i] = '\0';
+	return (dst);
+}
+
+/**
+ * @brief メモリ領域bにサイズlenまでcの内容で埋めます
+ *
+ * @param b			: セットするメモリ領域
+ * @param c			: セットする文字(255以上の上位ビットは無視されます)
+ * @param len		: セットするサイズ
+ * @return void*	: bのアドレス
+ */
+void	*gnl_memset(void *b, int c, size_t len)
+{
+	size_t			i;
+	unsigned char	*ptr;
+
+	i = 0;
+	ptr = (unsigned char *)b;
+	while (i < len)
+		ptr[i++] = (unsigned char)c;
+	return (b);
+}
+
+/**
+ * @brief count * sizeのメモリ領域を0埋めした状態で確保します
+ * 
+ * @param count		: 確保するメモリ領域の個数 
+ * @param size		: メモリ領域のサイズ
+ * @return void*	: 確保したメモリ領域の先頭ポインタ 
+ */
+void	*gnl_calloc(size_t count, size_t size)
+{
+	void	*_block;
+
+	if (count == 0 || size == 0)
+		return (malloc(0));
+	if (size > SIZE_MAX / count)
 		return (NULL);
-	*new_node = (t_fd_buf){.fd = fd, .next = NULL};
-	new_node->buf = malloc(BUFFER_SIZE * sizeof(char));
-	if (!new_node->buf)
-	{
-		free(new_node);
+	_block = malloc(count * size);
+	if (!_block)
 		return (NULL);
-	}
-	ui = 0;
-	while (ui < BUFFER_SIZE)
-		new_node->buf[ui++] = '\0';
-	return (new_node);
+	gnl_memset(_block, 0, count * size);
+	return (_block);
 }
 
 /**
- * @brief Add a new node at the beginning
- *
- * @param head 		: First pointer to fd structure list
- * @param new_node	:Pointer to node to be added
- * @retval GNL_OK	: node creation succeeded
- * @retval GNL_NG	: Node creation failure
+ * @brief lineの中の文字列を解放してNULLをセットします。
+ * 
+ * @param line		: 行の情報を管理する構造体
+ * @return void*	: NULLを返します
  */
-static int	_add_fd_node(t_fd_buf **head, t_fd_buf *new_node)
+void	*gnl_line_free(t_string *line)
 {
-	if (!head || !new_node)
-		return (GNL_NG);
-	new_node->next = *head;
-	*head = new_node;
-	return (GNL_OK);
-}
-
-/**
- * @brief Delete a node in the specified fd.
- *
- * @param head : head of list of file descriptor nodes
- * @param fd : file descriptor to search
- */
-int	delete_fd_node(t_fd_buf **head, int fd)
-{
-	t_fd_buf	*current;
-	t_fd_buf	*prev;
-
-	if (!head || !*head)
-		return (GNL_NG);
-	current = *head;
-	prev = NULL;
-	while (current)
+	if (line->str)
 	{
-		if (current->fd == fd)
-		{
-			if (prev)
-				prev->next = current->next;
-			else
-				*head = current->next;
-			if (current->buf)
-				free(current->buf);
-			free(current);
-			return (GNL_OK);
-		}
-		prev = current;
-		current = current->next;
+		free(line->str);
+		line->str = NULL;
 	}
-	return (GNL_NG);
+	return (NULL);
 }
 
 /**
- * @brief Set the sts object
+ * @brief putcとgetcの状態からgnlの状態を設定します
  *
- * @param [out]	result	: state-management structure
- * @return t_sts*		: Same as argument
+ * @param [out]	status	: 状態管理用の構造体
+ * @return t_sts*		: gnlの状態適用後のstatus
+ * @note	GNL_READ	: 行読み取り中
+ * @note	GNL_EOF		: EOFに達した
+ * @note	GNL_ERR		: 処理中にエラーが発生
  */
-t_sts	*set_sts(t_sts *result)
+t_sts	*set_sts(t_sts *status)
 {
-	if (result->getc_sts == GETC_OK && result->putc_sts == PUTC_OK)
-		result->gnl_sts = GNL_READ;
-	else if (result->getc_sts == GETC_EOF && result->putc_sts == PUTC_OK)
-		result->gnl_sts = GNL_EOF;
+	if (status->getc_sts == GETC_OTHER && status->putc_sts == PUTC_OK)
+		status->gnl_sts = GNL_READ;
+	else if (status->getc_sts == GETC_LF && status->putc_sts == PUTC_OK)
+		status->gnl_sts = GNL_LF;
+	else if (status->getc_sts == GETC_EOF && status->putc_sts == PUTC_OK)
+		status->gnl_sts = GNL_EOF;
 	else
-		result->gnl_sts = GNL_ERR;
-	return (result);
-}
-
-/**
- * @brief Set up fd buf
- *
- * @param fd 			: file descripter
- * @param fd_list		: List of fd_buf structures
- * @return t_fd_buf*	: Returns the structure of fd_buf specified by the fd
- */
-t_fd_buf	*setup_fd_buf(int fd, t_fd_buf **fd_list)
-{
-	t_fd_buf	*current_fd;
-	t_fd_buf	*head;
-
-	if (read(fd, NULL, 0) == -1)
-		return (NULL);
-	head = *fd_list;
-	while (head && head->fd != fd)
-		head = head->next;
-	current_fd = head;
-	if (!current_fd)
-	{
-		current_fd = _new_fd_node(fd);
-		if (!current_fd)
-			return (NULL);
-		if (_add_fd_node(fd_list, current_fd) == GNL_NG)
-		{
-			delete_fd_node(fd_list, fd);
-			return (NULL);
-		}
-	}
-	return (current_fd);
+		status->gnl_sts = GNL_ERR;
+	return (status);
 }
