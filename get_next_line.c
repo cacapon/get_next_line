@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/07 18:15:57 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 18:35:22 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ static t_buf	*_gnl_buf_init(t_buf **s_buf, int fd)
 		(*s_buf)->buf = gnl_calloc(BUFFER_SIZE, 1);
 		if (!(*s_buf)->buf)
 		{
-			free(s_buf);
+			free(*s_buf);
 			*s_buf = NULL;
 			return (NULL);
 		}
