@@ -75,6 +75,22 @@ void	*gnl_calloc(size_t count, size_t size)
 }
 
 /**
+ * @brief lineの中の文字列を解放してNULLをセットします。
+ * 
+ * @param line		: 行の情報を管理する構造体
+ * @return void*	: NULLを返します
+ */
+void	*gnl_line_free(t_string *line)
+{
+	if (line->str)
+	{
+		free(line->str);
+		line->str = NULL;
+	}
+	return (NULL);
+}
+
+/**
  * @brief putcとgetcの状態からgnlの状態を設定します
  *
  * @param [out]	status	: 状態管理用の構造体

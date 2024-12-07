@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/07 17:39:42 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 18:16:11 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 // include
 # include <stdint.h>
 # include <stdlib.h>
-# include <stdint.h>
 # include <unistd.h>
 
 // enum
@@ -79,6 +78,7 @@ t_sts			*set_sts(t_sts *result);
 void			*gnl_memset(void *b, int c, size_t len);
 char			*gnl_strncpy(char *dst, const char *src, size_t srcsize);
 void			*gnl_calloc(size_t count, size_t size);
+void			*gnl_line_free(t_string *line);
 
 // get_next_line
 char			*get_next_line(int fd);
