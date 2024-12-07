@@ -136,7 +136,7 @@ char	*get_next_line(int fd)
 	static t_buf	*buf[MAX_FD];
 	t_string		newline;
 	unsigned char	uc;
-	t_sts			result;
+	t_sts			status;
 
 	if ((fd < 0 || MAX_FD - 1 < fd) || BUFFER_SIZE <= 0)
 		return (NULL);
@@ -145,17 +145,16 @@ char	*get_next_line(int fd)
 	newline = (t_string){.str = NULL, .len = 0, .capa = 0};
 	while (1)
 	{
-		result.getc_sts = _ft_getc(buf[fd], &uc);
-		result.putc_sts = _ft_putc(&newline, uc, result.getc_sts);
-		set_sts(&result);
-		if (result.gnl_sts == GNL_ERR)
-			return (NULL);
-		if (result.gnl_sts == GNL_EOF || uc == '\n')
+		status.getc_sts = _ft_getc(buf[fd], &uc);
+		status.putc_sts = _ft_putc(&newline, uc, status.getc_sts);
+		if (set_sts(&status)->gnl_sts != GNL_READ)
 			break ;
 	}
-	if (newline.len > 0)
-		_ft_putc(&newline, '\0', result.getc_sts);
-	if (result.gnl_sts == GNL_EOF)
+	if (status.gnl_sts == GNL_LF || status.gnl_sts == GNL_EOF)
+		_ft_putc(&newline, '\0', status.getc_sts);
+	if (status.gnl_sts == GNL_EOF || status.gnl_sts == GNL_ERR)
 		_gnl_buf_free(&buf[fd]);
+	if (status.gnl_sts == GNL_ERR)
+		return (gnl_line_free(&newline));
 	return (newline.str);
 }

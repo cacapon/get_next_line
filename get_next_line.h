@@ -31,6 +31,7 @@ typedef enum e_gnl_sts
 {
 	GNL_INIT,
 	GNL_READ,
+	GNL_LF,
 	GNL_EOF,
 	GNL_ERR,
 }				t_gnl_sts;

@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/07 17:16:56 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 18:09:17 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,10 @@ void	*gnl_calloc(size_t count, size_t size)
  */
 t_sts	*set_sts(t_sts *status)
 {
-	if (status->getc_sts == GETC_OK && status->putc_sts == PUTC_OK)
+	if (status->getc_sts == GETC_OTHER && status->putc_sts == PUTC_OK)
 		status->gnl_sts = GNL_READ;
+	else if (status->getc_sts == GETC_LF && status->putc_sts == PUTC_OK)
+		status->gnl_sts = GNL_LF;
 	else if (status->getc_sts == GETC_EOF && status->putc_sts == PUTC_OK)
 		status->gnl_sts = GNL_EOF;
 	else
