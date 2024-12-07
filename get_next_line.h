@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/07 16:48:21 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 17:03:55 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,6 @@
 # include <unistd.h>
 
 // enum
-typedef enum e_gnl_common_sts
-{
-	GNL_OK = 0,
-	GNL_NG = 1,
-}				t_gnl_common_sts;
-
 typedef enum e_gnl_sts
 {
 	GNL_INIT,
@@ -81,6 +75,7 @@ typedef struct s_string
 t_sts			*set_sts(t_sts *result);
 void			*gnl_memset(void *b, int c, size_t len);
 char			*gnl_strncpy(char *dst, const char *src, size_t srcsize);
+void			*gnl_calloc(size_t count, size_t size);
 
 // get_next_line
 char			*get_next_line(int fd);

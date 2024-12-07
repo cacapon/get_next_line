@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/07 16:55:22 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 17:05:25 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,10 @@ static int	_ft_putc(t_string *line, char c, t_getc_sts sts)
 	if (line->len + 1 >= line->capa)
 	{
 		line->capa = (line->len + 1) * 2;
-		tmp = malloc(line->capa);
+		tmp = gnl_calloc(line->capa, 1);
 		if (!tmp)
 			return (PUTC_ERR);
-		gnl_memset(tmp, 0, line->capa);
 		gnl_strncpy(tmp, line->str, line->len);
-		tmp[line->len] = '\0';
 		free(line->str);
 		line->str = tmp;
 	}
@@ -85,17 +83,16 @@ static t_buf	*_ft_buf_init(t_buf **s_buf, int fd)
 		return (NULL);
 	if (!*s_buf)
 	{
-		*s_buf = malloc(sizeof(t_buf));
+		*s_buf = gnl_calloc(sizeof(t_buf), 1);
 		if (!*s_buf)
 			return (NULL);
-		(*s_buf)->buf = malloc(BUFFER_SIZE);
+		(*s_buf)->buf = gnl_calloc(BUFFER_SIZE, 1);
 		if (!(*s_buf)->buf)
 		{
 			free(s_buf);
 			*s_buf = NULL;
 			return (NULL);
 		}
-		gnl_memset((*s_buf)->buf, 0, BUFFER_SIZE);
 		(*s_buf)->buf_len = 0;
 		(*s_buf)->bufp = (*s_buf)->buf;
 		(*s_buf)->fd = fd;

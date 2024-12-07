@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/07 16:48:35 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 17:03:12 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,28 @@ void	*gnl_memset(void *b, int c, size_t len)
 	while (i < len)
 		ptr[i++] = (unsigned char)c;
 	return (b);
+}
+
+/**
+ * @brief 
+ * 
+ * @param count 
+ * @param size 
+ * @return void* 
+ */
+void	*gnl_calloc(size_t count, size_t size)
+{
+	void	*_block;
+
+	if (count == 0 || size == 0)
+		return (malloc(0));
+	if (size > SIZE_MAX / count)
+		return (NULL);
+	_block = malloc(count * size);
+	if (!_block)
+		return (NULL);
+	gnl_memset(_block, 0, count * size);
+	return (_block);
 }
 
 /**
