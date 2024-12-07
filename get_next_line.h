@@ -6,15 +6,22 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/06 11:05:29 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 15:52:46 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
+
+// define
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 3
 # endif
+# ifndef MAX_FD
+#  define MAX_FD 256
+# endif
+
+// include
 # include <stdlib.h>
 # include <unistd.h>
 
@@ -55,14 +62,13 @@ typedef struct s_sts
 	t_putc_sts		putc_sts;
 }					t_sts;
 
-typedef struct s_fd_buf
+typedef struct s_buf
 {
 	int				fd;
 	char			*buf;
 	char			*bufp;
 	ssize_t			buf_len;
-	struct s_fd_buf	*next;
-}					t_fd_buf;
+}					t_buf;
 
 typedef struct s_string
 {
@@ -72,8 +78,8 @@ typedef struct s_string
 }					t_string;
 
 // util function
-int					delete_fd_node(t_fd_buf **head, int fd);
-t_fd_buf			*setup_fd_buf(int fd, t_fd_buf **fd_list);
+// int					delete_fd_node(t_fd_buf **head, int fd);
+// t_fd_buf			*setup_fd_buf(int fd, t_fd_buf **fd_list);
 t_sts				*set_sts(t_sts *result);
 
 // get_next_line

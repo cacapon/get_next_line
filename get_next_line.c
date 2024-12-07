@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/06 11:30:30 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 16:38:33 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,21 +32,33 @@ static char	*_ft_strncpy(char *dst, const char *src, size_t srcsize)
 	return (dst);
 }
 
-/**
- * @brief Error handling for get_next_line
- *
- * @param [out]	fd_list	: file descriptor structure list.
- * @param [out]	newline	: string structure
- * @param [in]	fd		: file descriptor
- * @retval void*		: NULL
- */
-static void	*_handle_error(t_fd_buf **fd_list, t_string *newline, int fd)
+static void	*_ft_memset(void *b, int c, size_t len)
 {
-	delete_fd_node(fd_list, fd);
-	if (newline->str)
-		free(newline->str);
-	return (NULL);
+	size_t			i;
+	unsigned char	*ptr;
+
+	i = 0;
+	ptr = (unsigned char *)b;
+	while (i < len)
+		ptr[i++] = (unsigned char)c;
+	return (b);
 }
+
+// /**
+//  * @brief Error handling for get_next_line
+//  *
+//  * @param [out]	fd_list	: file descriptor structure list.
+//  * @param [out]	newline	: string structure
+//  * @param [in]	fd		: file descriptor
+//  * @retval void*		: NULL
+//  */
+// static void	*_handle_error(t_fd_buf **fd_list, t_string *newline, int fd)
+// {
+// 	delete_fd_node(fd_list, fd);
+// 	if (newline->str)
+// 		free(newline->str);
+// 	return (NULL);
+//}
 
 /**
  * @brief one character from buf and stores it in variable c.
@@ -56,11 +68,10 @@ static void	*_handle_error(t_fd_buf **fd_list, t_string *newline, int fd)
  * @retval PUTC_OK		: Letter C was obtained from buf
  * @retval PUTC_ERR		: Failure to obtain character c
  * @retval PUTC_EOF		: Reach EOF
+ * @note	<pre> fd_buf != NULL
  */
-static int	_ft_getc(t_fd_buf *fd_buf, unsigned char *cp)
+static int	_ft_getc(t_buf *fd_buf, unsigned char *cp)
 {
-	if (read(fd_buf->fd, NULL, 0) == -1)
-		return (GETC_ERR);
 	if (fd_buf->buf_len == 0)
 	{
 		fd_buf->buf_len = read(fd_buf->fd, fd_buf->buf, BUFFER_SIZE);
@@ -84,32 +95,53 @@ static int	_ft_getc(t_fd_buf *fd_buf, unsigned char *cp)
  * @retval PUTC_OK	: you was able to add one character to the line.
  * @retval PUTC_ERR	: Memory allocation failure/putc failed
  */
-static int	_ft_putc(t_string *str, char c, t_getc_sts sts)
+static int	_ft_putc(t_string *line, char c, t_getc_sts sts)
 {
 	char	*tmp;
-	size_t	i;
 
 	if (sts == GETC_EOF)
 		return (PUTC_OK);
 	if (sts == GETC_ERR)
 		return (PUTC_ERR);
-	if (str->len + 1 >= str->capa)
+	if (line->len + 1 >= line->capa)
 	{
-		str->capa = (str->len + 1) * 2;
-		tmp = malloc(str->capa);
+		line->capa = (line->len + 1) * 2;
+		tmp = malloc(line->capa);
 		if (!tmp)
 			return (PUTC_ERR);
-		i = 0;
-		while (i < str->capa)
-			tmp[i++] = 0;
-		_ft_strncpy(tmp, str->str, str->len);
-		tmp[str->len] = '\0';
-		free(str->str);
-		str->str = tmp;
+		_ft_memset(tmp, 0, line->capa);
+		_ft_strncpy(tmp, line->str, line->len);
+		tmp[line->len] = '\0';
+		free(line->str);
+		line->str = tmp;
 	}
-	str->str[str->len] = c;
-	str->len++;
+	line->str[line->len] = c;
+	line->len++;
 	return (PUTC_OK);
+}
+
+static t_buf	*_ft_buf_init(t_buf **s_buf, int fd)
+{
+	if (!s_buf)
+		return (NULL);
+	if (!*s_buf)
+	{
+		*s_buf = malloc(sizeof(t_buf));
+		if (!*s_buf)
+			return (NULL);
+		(*s_buf)->buf = malloc(BUFFER_SIZE);
+		if (!(*s_buf)->buf)
+		{
+			free(s_buf);
+			*s_buf = NULL;
+			return (NULL);
+		}
+		_ft_memset((*s_buf)->buf, 0, BUFFER_SIZE);
+		(*s_buf)->buf_len = 0;
+		(*s_buf)->bufp = (*s_buf)->buf;
+		(*s_buf)->fd = fd;
+	}
+	return (*s_buf);
 }
 
 /**
@@ -120,29 +152,29 @@ static int	_ft_putc(t_string *str, char c, t_getc_sts sts)
  */
 char	*get_next_line(int fd)
 {
-	static t_fd_buf	*fd_list = NULL;
-	t_fd_buf		*current_fd;
+	static t_buf	*buf[MAX_FD];
 	t_string		newline;
-	unsigned char	byte_read;
+	unsigned char	uc;
 	t_sts			result;
 
-	current_fd = setup_fd_buf(fd, &fd_list);
-	if (!current_fd || BUFFER_SIZE <= 0)
+	if ((fd < 0 || MAX_FD - 1 < fd) || BUFFER_SIZE <= 0)
+		return (NULL);
+	if (!_ft_buf_init(&buf[fd], fd))
 		return (NULL);
 	newline = (t_string){.str = NULL, .len = 0, .capa = 0};
 	while (1)
 	{
-		result.getc_sts = _ft_getc(current_fd, &byte_read);
-		result.putc_sts = _ft_putc(&newline, byte_read, result.getc_sts);
+		result.getc_sts = _ft_getc(buf[fd], &uc);
+		result.putc_sts = _ft_putc(&newline, uc, result.getc_sts);
 		set_sts(&result);
 		if (result.gnl_sts == GNL_ERR)
-			return (_handle_error(&fd_list, &newline, fd));
-		if (result.gnl_sts == GNL_EOF || byte_read == '\n')
+			return (NULL);
+		if (result.gnl_sts == GNL_EOF || uc == '\n')
 			break ;
 	}
 	if (newline.len > 0)
 		_ft_putc(&newline, '\0', result.getc_sts);
 	if (result.gnl_sts == GNL_EOF)
-		delete_fd_node(&fd_list, fd);
+		;
 	return (newline.str);
 }
