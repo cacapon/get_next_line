@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/07 18:35:22 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 19:02:54 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ char	*get_next_line(int fd)
 	unsigned char	uc;
 	t_sts			status;
 
-	if ((fd < 0 || MAX_FD - 1 < fd) || BUFFER_SIZE <= 0)
+	if (fd < 0 || MAX_FD <= fd)
 		return (NULL);
 	if (!_gnl_buf_init(&buf[fd], fd))
 		return (NULL);

@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/07 18:16:11 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 18:52:32 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 // define
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 3
+# endif
+# if BUFFER_SIZE <= 0
+#  error "BUFFER_SIZE must be a positive number"
 # endif
 # ifndef MAX_FD
 #  define MAX_FD 256
