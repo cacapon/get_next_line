@@ -6,21 +6,21 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/07 17:05:25 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 17:28:53 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 /**
- * @brief one character from buf and stores it in variable c.
+ * @brief fd_buf内にあるバッファから1文字取り出しcpにセットします
  *
- * @param fd_buf		: fd_buf structures
- * @param cp			: Pointer to character variable
- * @retval PUTC_OK		: Letter C was obtained from buf
- * @retval PUTC_ERR		: Failure to obtain character c
- * @retval PUTC_EOF		: Reach EOF
- * @note	<pre> fd_buf != NULL
+ * @param [out] fd_buf	: fd_buf 構造体
+ * @param [out] cp		: 文字のポインタ
+ * @retval PUTC_OK		: 文字の取り出しに成功
+ * @retval PUTC_ERR		: 文字取り出し中にエラーになった
+ * @retval PUTC_EOF		: EOFに達した
+ * @note	<pre> fd_buf != NULL (呼出し側でfd_bufを設定する必要がある)
  */
 static int	_ft_getc(t_buf *fd_buf, unsigned char *cp)
 {
@@ -39,13 +39,13 @@ static int	_ft_getc(t_buf *fd_buf, unsigned char *cp)
 }
 
 /**
- * @brief Adds the character c to the end of the string str.
+ * @brief  string構造体に含まれるstrにcを追加します
  *
- * @param [out]	str	: The string to which the character c is added.
- * @param [in]	c	: Characters you want to add.
- * @param sts 		: getc status.
- * @retval PUTC_OK	: you was able to add one character to the line.
- * @retval PUTC_ERR	: Memory allocation failure/putc failed
+ * @param [out]	line	: 行情報を管理する構造体
+ * @param [in]	c		: line.strに追加する文字
+ * @param sts 			: getcの状態
+ * @retval PUTC_OK		: lineにcを追加できた
+ * @retval PUTC_ERR		: 追加する処理の途中でエラーになった
  */
 static int	_ft_putc(t_string *line, char c, t_getc_sts sts)
 {
@@ -71,13 +71,14 @@ static int	_ft_putc(t_string *line, char c, t_getc_sts sts)
 }
 
 /**
- * @brief 
- * 
- * @param s_buf 
- * @param fd 
- * @return t_buf* 
+ * @brief 対象のfd用バッファが未作成の場合に初期化します
+ *
+ * @param [out]	s_buf	: バッファ構造体のアドレス
+ * @param [in]	fd		: ファイルディスクプリタ
+ * @retval t_buf* 		: 初期化済みの構造体
+ * @retval NULL 		: 初期化に失敗
  */
-static t_buf	*_ft_buf_init(t_buf **s_buf, int fd)
+static t_buf	*_gnl_buf_init(t_buf **s_buf, int fd)
 {
 	if (!s_buf)
 		return (NULL);
@@ -101,11 +102,11 @@ static t_buf	*_ft_buf_init(t_buf **s_buf, int fd)
 }
 
 /**
- * @brief 
- * 
- * @param s_buf 
+ * @brief 渡されたバッファ構造体メモリを解放してNULLをセットします
+ *
+ * @param [out]	s_buf	: メモリ解放するバッファ構造体
  */
-static void	_ft_buf_free(t_buf **s_buf)
+static void	_gnl_buf_free(t_buf **s_buf)
 {
 	if (!s_buf)
 		return ;
@@ -122,10 +123,10 @@ static void	_ft_buf_free(t_buf **s_buf)
 }
 
 /**
- * @brief Returns a string of text in fd up to a newline.
- * @param [in] fd	: file descriptor
- * @retval char* 	: read line
- * @retval NULL		: Could not read or error
+ * @brief fdから改行までの文字列を改行込みで取得します 
+ * @param [in] fd	: ファイルディスクリプタ
+ * @retval char* 	: fdから取得した改行を含む文字列
+ * @retval NULL		: 読み込み失敗エラー 
  */
 char	*get_next_line(int fd)
 {
@@ -136,7 +137,7 @@ char	*get_next_line(int fd)
 
 	if ((fd < 0 || MAX_FD - 1 < fd) || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (!_ft_buf_init(&buf[fd], fd))
+	if (!_gnl_buf_init(&buf[fd], fd))
 		return (NULL);
 	newline = (t_string){.str = NULL, .len = 0, .capa = 0};
 	while (1)
@@ -152,6 +153,6 @@ char	*get_next_line(int fd)
 	if (newline.len > 0)
 		_ft_putc(&newline, '\0', result.getc_sts);
 	if (result.gnl_sts == GNL_EOF)
-		_ft_buf_free(&buf[fd]);
+		_gnl_buf_free(&buf[fd]);
 	return (newline.str);
 }

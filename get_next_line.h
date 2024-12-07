@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/07 17:03:55 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 17:07:32 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ typedef enum e_putc_sts
 }				t_putc_sts;
 
 // struct
-
 typedef struct s_sts
 {
 	t_gnl_sts	gnl_sts;

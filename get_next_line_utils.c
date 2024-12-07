@@ -6,19 +6,19 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:41 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/07 17:03:12 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 17:16:56 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 /**
- * @brief Copy src to dst up to strsize characters.
+ * @brief srcをdstに文字数srcsizeまでコピーします 
  *
- * @param [out] dst		: Destination memory address
- * @param [in]	src 	: Source string
- * @param [in]	srcsize	: Number of characters to copy
- * @return char* 		: dst's top pointer
+ * @param [out] dst		: コピー先の文字列領域
+ * @param [in]	src 	: コピーする文字列
+ * @param [in]	srcsize	: コピーサイズ
+ * @return char* 		: dstの先頭ポインタ
  */
 char	*gnl_strncpy(char *dst, const char *src, size_t srcsize)
 {
@@ -33,12 +33,12 @@ char	*gnl_strncpy(char *dst, const char *src, size_t srcsize)
 }
 
 /**
- * @brief
+ * @brief メモリ領域bにサイズlenまでcの内容で埋めます
  *
- * @param b
- * @param c
- * @param len
- * @return void*
+ * @param b			: セットするメモリ領域
+ * @param c			: セットする文字(255以上の上位ビットは無視されます)
+ * @param len		: セットするサイズ
+ * @return void*	: bのアドレス
  */
 void	*gnl_memset(void *b, int c, size_t len)
 {
@@ -53,11 +53,11 @@ void	*gnl_memset(void *b, int c, size_t len)
 }
 
 /**
- * @brief 
+ * @brief count * sizeのメモリ領域を0埋めした状態で確保します
  * 
- * @param count 
- * @param size 
- * @return void* 
+ * @param count		: 確保するメモリ領域の個数 
+ * @param size		: メモリ領域のサイズ
+ * @return void*	: 確保したメモリ領域の先頭ポインタ 
  */
 void	*gnl_calloc(size_t count, size_t size)
 {
@@ -75,18 +75,21 @@ void	*gnl_calloc(size_t count, size_t size)
 }
 
 /**
- * @brief Set the sts object
+ * @brief putcとgetcの状態からgnlの状態を設定します
  *
- * @param [out]	result	: state-management structure
- * @return t_sts*		: Same as argument
+ * @param [out]	status	: 状態管理用の構造体
+ * @return t_sts*		: gnlの状態適用後のstatus
+ * @note	GNL_READ	: 行読み取り中
+ * @note	GNL_EOF		: EOFに達した
+ * @note	GNL_ERR		: 処理中にエラーが発生
  */
-t_sts	*set_sts(t_sts *result)
+t_sts	*set_sts(t_sts *status)
 {
-	if (result->getc_sts == GETC_OK && result->putc_sts == PUTC_OK)
-		result->gnl_sts = GNL_READ;
-	else if (result->getc_sts == GETC_EOF && result->putc_sts == PUTC_OK)
-		result->gnl_sts = GNL_EOF;
+	if (status->getc_sts == GETC_OK && status->putc_sts == PUTC_OK)
+		status->gnl_sts = GNL_READ;
+	else if (status->getc_sts == GETC_EOF && status->putc_sts == PUTC_OK)
+		status->gnl_sts = GNL_EOF;
 	else
-		result->gnl_sts = GNL_ERR;
-	return (result);
+		status->gnl_sts = GNL_ERR;
+	return (status);
 }
