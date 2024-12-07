@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:08:36 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/07 17:07:32 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 17:39:42 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 
 // include
 # include <stdlib.h>
+# include <stdint.h>
 # include <unistd.h>
 
 // enum
