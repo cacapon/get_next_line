@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/07 16:54:00 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 16:55:22 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ static t_buf	*_ft_buf_init(t_buf **s_buf, int fd)
 static void	_ft_buf_free(t_buf **s_buf)
 {
 	if (!s_buf)
-		return (NULL);
+		return ;
 	if (*s_buf)
 	{
 		if ((*s_buf)->buf)
