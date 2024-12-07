@@ -37,15 +37,16 @@ typedef enum e_gnl_sts
 
 typedef enum e_getc_sts
 {
-	GETC_ERR = -1,
-	GETC_EOF = 0,
-	GETC_OK = 1,
+	GETC_ERR,
+	GETC_EOF,
+	GETC_OTHER,
+	GETC_LF,
 }				t_getc_sts;
 
 typedef enum e_putc_sts
 {
-	PUTC_ERR = -1,
-	PUTC_OK = 1,
+	PUTC_ERR,
+	PUTC_OK,
 }				t_putc_sts;
 
 // struct

@@ -6,7 +6,7 @@
 /*   By: ttsubo <ttsubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:07:44 by ttsubo            #+#    #+#             */
-/*   Updated: 2024/12/07 17:28:53 by ttsubo           ###   ########.fr       */
+/*   Updated: 2024/12/07 18:15:57 by ttsubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,10 @@ static int	_ft_getc(t_buf *fd_buf, unsigned char *cp)
 	}
 	*cp = (unsigned char)*fd_buf->bufp++;
 	fd_buf->buf_len--;
-	return (GETC_OK);
+	if (*cp == '\n')
+		return (GETC_LF);
+	else
+		return (GETC_OTHER);
 }
 
 /**
